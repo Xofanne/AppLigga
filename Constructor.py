@@ -652,7 +652,6 @@ class MainApp(ctk.CTk):
                 self.Dados.Cliente.CEP,
                 self.Dados.Cliente.Rua,
                 self.Dados.Cliente.Numero,
-                self.Dados.Cliente.Complemento,
                 self.Dados.Cliente.Cidade,
                 self.Dados.Cliente.Empresa,
                 self.Dados.Cliente.Velocidade,
@@ -679,7 +678,6 @@ class MainApp(ctk.CTk):
                     self.Dados.Cliente.CEP,
                     self.Dados.Cliente.Rua,
                     self.Dados.Cliente.Numero,
-                    self.Dados.Cliente.Complemento,
                     self.Dados.Cliente.Cidade,
                     self.Dados.Cliente.Empresa,
                     self.Dados.Cliente.Velocidade,
@@ -718,8 +716,6 @@ class MainApp(ctk.CTk):
 
         if len(self.Dados.Cliente.Adicionais) == 0:
             self.Dados.Cliente.Adicionais.append("Nenhum")
-            
-        mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
 
         self.listaDeDados = [   
             self.Dados.Operador.Entrada, 
@@ -765,6 +761,8 @@ class MainApp(ctk.CTk):
                     txt.write("Adicionais : ")
                     txt.write(str(x))
                     txt.write("\n")
+        
+        mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
         
         for x in self.listaDeDados:
             if x == self.Dados.Operador.Matricula or x == self.Dados.Operador.Entrada:
