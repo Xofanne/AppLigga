@@ -11,15 +11,10 @@ class Dados():
     def __init__(self, master) -> None:
         
         self.Operador = DadosOperador()
-
         self.Opcionais = DadosOpcionais()
-
         self.Cliente = DadosCliente()
-
         self.CPF = DadosCPF()
-
         self.CNPJ = DadosCNPJ()
-
 
 class DadosOperador():
     def __init__(self) -> None:
@@ -179,7 +174,6 @@ class TabViewDados(ctk.CTkTabview):
         ### -------- ###
 
         ### Linha 3 / Contato principal
-
         self.label_CNPJ_Contato = ctk.CTkLabel(self.tab(self.TabCNPJ), text='Contato')
         self.label_CNPJ_Contato.grid(row=2, column=0, sticky='sw', pady=2, padx=4, columnspan=2)
 
@@ -203,7 +197,6 @@ class TabViewDados(ctk.CTkTabview):
         ### -------- ###
 
         ### Linha 3 / Contato financeiro
-
         self.label_CNPJ_Financeiro = ctk.CTkLabel(self.tab(self.TabCNPJ), text='Contato financeiro')
         self.label_CNPJ_Financeiro.grid(row=4, column=0, sticky='sw', pady=2, padx=4, columnspan=2)
 
@@ -231,7 +224,6 @@ class TabViewDados(ctk.CTkTabview):
         
         self.valida(Dados)
         
-
     def valida(self, Dados):
         Dados.CPF.CPF.set("")
         Dados.CPF.DataDeNascimento.set("")
@@ -291,12 +283,10 @@ class FrameCEP(ctk.CTkFrame):
 
     def PesquisarCep(self, Dados):
         try:
-
             address = get_address_from_cep(Dados.Cliente.CEP.get())
             Dados.Cliente.Rua.set(value=f"{address['street']}")
             Dados.Cliente.Cidade.set(value=f"{address['city']} / {address['uf']}")
             # {'district': 'Bairro', 'cep': 'xxxxx-xxx', 'city': 'Cidade', 'street': 'Rua', 'uf': 'Estado', 'complement': '?'}
-
         except ValueError as ve:
             Dados.Cliente.Rua.set(value=f"CEP não pode estar vazio")
 
@@ -407,7 +397,6 @@ class FrameEmpresa(ctk.CTkFrame):
         self.tabviewAdicionais.grid(row=0, rowspan=6, column=2, pady=3, padx=(5, 0), sticky='ew')
 
     def SetAdicionais(self, adicionaisTab, Dados):
-
         self.ClearAdicionais(adicionaisTab, Dados)
 
         if self.options_empresa.get() == self.tabviewAdicionais.TabLigga_C:
@@ -427,17 +416,17 @@ class FrameEmpresa(ctk.CTkFrame):
             adicionaisTab.set(adicionaisTab.TabRN)
 
     def ClearAdicionais(self, adicionaisTab, Dados):
-            adicionaisTab.checkbox_Ligga_HBO.deselect()
-            adicionaisTab.checkbox_Ligga_Paramount.deselect()
-            adicionaisTab.checkbox_Ligga_Seguro.deselect()
-            adicionaisTab.checkbox_Ligga_Mesh.deselect()
-            adicionaisTab.checkbox_Nova_Seguro.deselect()
-            adicionaisTab.checkbox_Nova_Rastreamento.deselect()
-            adicionaisTab.checkbox_Nova_Monitoramento.deselect()
-            adicionaisTab.checkbox_RN_HBO.deselect()
-            adicionaisTab.checkbox_RN_Paramount.deselect()
-            adicionaisTab.checkbox_RN_Seguro.deselect()
-            Dados.Cliente.Adicionais.clear()
+        adicionaisTab.checkbox_Ligga_HBO.deselect()
+        adicionaisTab.checkbox_Ligga_Paramount.deselect()
+        adicionaisTab.checkbox_Ligga_Seguro.deselect()
+        adicionaisTab.checkbox_Ligga_Mesh.deselect()
+        adicionaisTab.checkbox_Nova_Seguro.deselect()
+        adicionaisTab.checkbox_Nova_Rastreamento.deselect()
+        adicionaisTab.checkbox_Nova_Monitoramento.deselect()
+        adicionaisTab.checkbox_RN_HBO.deselect()
+        adicionaisTab.checkbox_RN_Paramount.deselect()
+        adicionaisTab.checkbox_RN_Seguro.deselect()
+        Dados.Cliente.Adicionais.clear()
 
 
 class FrameData(ctk.CTkFrame):
@@ -579,7 +568,6 @@ class MainApp(ctk.CTk):
         except:
             ctk.set_default_color_theme("dark-blue.json")
 
-        original_locale = locale.getlocale(locale.LC_NUMERIC)
         locale.setlocale(locale.LC_NUMERIC, "C")
         
         self.caminhoArquivo = pathlib.Path(__file__).parent.parent.resolve()
@@ -597,7 +585,6 @@ class MainApp(ctk.CTk):
         except:
             print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs")
 
-
         self.title('App')
 
         self.minsize(900, 380) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
@@ -607,16 +594,15 @@ class MainApp(ctk.CTk):
         self.grid_columnconfigure((2), weight=1)
         self.grid_rowconfigure((0, 1), weight=1)
 
-
         self.CriaDados()
 
         self.confirmFrame = FrameConfirm(self, self.Dados, self.empresaFrame)   
         self.confirmFrame.grid(row=1, column=2, pady=(2, 0), padx=(2, 0), sticky="nsew")
     
     def CriaDados(self):
+
         self.Dados = Dados(self)
 
-        # self.newTab = TabViewDados(self, self.DadosCliente, self.DadosCPF, self.DadosCNPJ)
         self.newTab = TabViewDados(self, self.Dados)
         self.newTab.configure(width=575)
         self.newTab.grid(row=0, column=0, pady=(0, 2), padx=(0, 2), sticky='ew', columnspan=2)
@@ -633,6 +619,7 @@ class MainApp(ctk.CTk):
         self.dataFrame.grid(row=1, column=1, pady=(2, 0), padx=2, sticky='nsew')
     
     def TopLevelError(self, *args: str):
+
         self.topviewError = ctk.CTkToplevel(self)
         self.topviewError.title("Erro")
         self.topviewError.geometry(f"+{self.winfo_x()+560}+{self.winfo_y()+240}")
@@ -764,7 +751,6 @@ class MainApp(ctk.CTk):
             self.Dados.Opcionais.OBS,
         ]
 
-        
         with open(self.txtFile, 'a') as txt:
             txt.write("\n\n# # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # #\n\n")
             txt.write("---VENDA---\n\n")
@@ -781,7 +767,6 @@ class MainApp(ctk.CTk):
                     txt.write("\n")
         
         for x in self.listaDeDados:
-            
             if x == self.Dados.Operador.Matricula or x == self.Dados.Operador.Entrada:
                 pass
             else:
@@ -789,11 +774,11 @@ class MainApp(ctk.CTk):
                     x.set("")
                 except:
                     self.Dados.Cliente.Adicionais.clear()
-            
-
+        
         return
 
 def main() -> None:
+
     Aplicativo = MainApp()
     Aplicativo.mainloop()
 
