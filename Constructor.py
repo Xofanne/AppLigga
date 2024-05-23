@@ -6,6 +6,7 @@ import pathlib
 from brazilcep import get_address_from_cep, exceptions
 import MontaForm as mf
 import webbrowser as wb
+import time
 
 class Dados():
     def __init__(self, master) -> None:
@@ -572,6 +573,23 @@ class MainApp(ctk.CTk):
         
         self.caminhoArquivo = pathlib.Path(__file__).parent.parent.resolve()
 
+        print('''\n\n//        :::        ::::::::::: ::::::::   ::::::::      :::                       
+//       :+:            :+:    :+:    :+: :+:    :+:   :+: :+:                      
+//      +:+            +:+    +:+        +:+         +:+   +:+                      
+//     +#+            +#+    :#:        :#:        +#++:++#++:                      
+//    +#+            +#+    +#+   +#+# +#+   +#+# +#+     +#+                       
+//   #+#            #+#    #+#    #+# #+#    #+# #+#     #+#                        
+//  ########## ########### ########   ########  ###     ###''')  
+        time.sleep(0.4)                       
+        print('''//    ::::::::::: :::::::::: :::        :::::::::: ::::::::   ::::::::    :::   ::: 
+//       :+:     :+:        :+:        :+:       :+:    :+: :+:    :+:  :+:+: :+:+: 
+//      +:+     +:+        +:+        +:+       +:+        +:+    +:+ +:+ +:+:+ +:+ 
+//     +#+     +#++:++#   +#+        +#++:++#  +#+        +#+    +:+ +#+  +:+  +#+  
+//    +#+     +#+        +#+        +#+       +#+        +#+    +#+ +#+       +#+   
+//   #+#     #+#        #+#        #+#       #+#    #+# #+#    #+# #+#       #+#    
+//  ###     ########## ########## ########## ########   ########  ###       ###\n\n''')
+        time.sleep(1)
+
         try:
             os.mkdir(f"{self.caminhoArquivo}\\TXTs")
             print(f"Pasta de textos criada em -> {self.caminhoArquivo}")
@@ -584,6 +602,7 @@ class MainApp(ctk.CTk):
             print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs")
         except:
             print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs")
+
 
         self.title('App')
 
