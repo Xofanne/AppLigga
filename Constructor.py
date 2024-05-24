@@ -7,6 +7,7 @@ from brazilcep import get_address_from_cep, exceptions
 import MontaForm as mf
 import webbrowser as wb
 import time
+import random as rd
 
 class Dados():
     def __init__(self, master) -> None:
@@ -604,7 +605,24 @@ class MainApp(ctk.CTk):
             print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs")
 
 
-        self.title('App')
+        self.titles = [
+                        'App Final  ̶d̶e̶ ̶v̶e̶r̶d̶a̶d̶e̶',
+                        'Frontbase App',
+                        'Insira um nome aqui -> _______',
+                        'Liggafy',
+                        'Mastermind App',
+                        'Base Builder',
+                        'Magnólia',
+                        'Colocar dados aqui ↓↓↓',
+                        'Colocar dados aqui 👇👇',
+                        'Laranja pra todo lado',
+                        'Tabuleta',
+                        'Esse app > Formulário',
+                        'ᵇᵒⁿᶦᶠᶦᶜᵃᶜᵃ̃ᵒ 🤏',
+                        'Anota na cabeça',
+                    ]
+        
+        self.title(rd.choice(self.titles))
 
         self.minsize(900, 380) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
         self.maxsize(1500, 380)
