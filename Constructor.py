@@ -538,6 +538,25 @@ class FrameConfirm(ctk.CTkFrame):
 
 
     def Configuracoes(self, master, Dados):
+
+        def Confirma():
+            self.button_config.configure(text=f"Matrícula: {Dados.Operador.Matricula.get()}\nEntrada: {Dados.Operador.Entrada.get()}")
+            try:
+                with open('dadosOperador.json', 'r+', encoding="utf8") as file:
+                    dados = json.load(file)
+                    dados['Matricula'] = Dados.Operador.Matricula.get()
+                    dados['Entrada'] = Dados.Operador.Entrada.get()
+                    file.seek(0)
+                    json.dump(dados, file)
+            except:
+                with open('_internal/dadosOperador.json', 'r+', encoding="utf8") as file:
+                    dados = json.load(file)
+                    dados['Matricula'] = Dados.Operador.Matricula.get()
+                    dados['Entrada'] = Dados.Operador.Entrada.get()
+                    file.seek(0)
+                    json.dump(dados, file)
+            self.toplevel_configs.destroy()
+
         self.toplevel_configs = ctk.CTkToplevel()
         self.toplevel_configs.title("Dados do Operador")
         self.toplevel_configs.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+200}")
@@ -555,7 +574,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.option_Entrada = ctk.CTkOptionMenu(self.toplevel_configs, variable=Dados.Operador.Entrada, values=self.ENTRADA, anchor="center")
         self.option_Entrada.grid(row=1, column=1, pady=8, padx=(8, 100))
 
-        self.button_confirma = ctk.CTkButton(self.toplevel_configs, text="Confirmar", command=lambda: (self.button_config.configure(text=f"Matrícula: {Dados.Operador.Matricula.get()}\nEntrada: {Dados.Operador.Entrada.get()}"), self.toplevel_configs.destroy()))
+        self.button_confirma = ctk.CTkButton(self.toplevel_configs, text="Confirmar", command=lambda: Confirma())
         self.button_confirma.grid(row=2, column=0, columnspan=2, pady=(8, 30), padx=100)
 
 
@@ -809,21 +828,6 @@ class MainApp(ctk.CTk):
                     txt.write("Adicionais : ")
                     txt.write(str(x))
                     txt.write("\n")
-        
-        try:
-            with open('dadosOperador.json', 'r+', encoding="utf8") as file:
-                dados = json.load(file)
-                dados['Matricula'] = self.Dados.Operador.Matricula.get()
-                dados['Entrada'] = self.Dados.Operador.Entrada.get()
-                file.seek(0)
-                json.dump(dados, file)
-        except:
-            with open('_internal/dadosOperador.json', 'r+', encoding="utf8") as file:
-                dados = json.load(file)
-                dados['Matricula'] = self.Dados.Operador.Matricula.get()
-                dados['Entrada'] = self.Dados.Operador.Entrada.get()
-                file.seek(0)
-                json.dump(dados, file)
 
         mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
         
