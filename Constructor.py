@@ -8,6 +8,7 @@ import MontaForm as mf
 import webbrowser as wb
 import time
 import random as rd
+import json
 
 class Dados():
     def __init__(self, master) -> None:
@@ -574,6 +575,15 @@ class MainApp(ctk.CTk):
         
         self.caminhoArquivo = pathlib.Path(__file__).parent.parent.resolve()
 
+        try:
+            with open('names.json', 'r', encoding="utf8") as names:
+                names_dados = json.load(names)
+                self.title(rd.choice(names_dados.get('names')))
+        except:
+            with open('_internal/names.json', 'r', encoding="utf8") as names:
+                names_dados = json.load(names)
+                self.title(rd.choice(names_dados.get('names')))
+                
         print('''\n\n//        :::        ::::::::::: ::::::::   ::::::::      :::                       
 //       :+:            :+:    :+:    :+: :+:    :+:   :+: :+:                      
 //      +:+            +:+    +:+        +:+         +:+   +:+                      
@@ -597,32 +607,22 @@ class MainApp(ctk.CTk):
         except:
             print(f"Pasta de textos já existe em -> {self.caminhoArquivo}")
 
+        month = datetime.today().strftime('%B')
+
         try:
-            self.txtFile = f"{self.caminhoArquivo}\\TXTs\\{datetime.today().strftime('%d-%m-%Y')}.txt"
-            open(self.txtFile, 'x+')
-            print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs")
+            os.mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}")
+            print(f"Pasta de textos do Mês criado em -> {self.caminhoArquivo}\\TXTs")
         except:
-            print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs")
+            print(f"Pasta do Mês já existe em -> {self.caminhoArquivo}\\TXTs")
 
 
-        self.titles = [
-                        'App Final  ̶d̶e̶ ̶v̶e̶r̶d̶a̶d̶e̶',
-                        'Frontbase App',
-                        'Insira um nome aqui -> _______',
-                        'Liggafy',
-                        'Mastermind App',
-                        'Base Builder',
-                        'Magnólia',
-                        'Colocar dados aqui ↓↓↓',
-                        'Colocar dados aqui 👇👇',
-                        'Laranja pra todo lado',
-                        'Tabuleta',
-                        'Esse app > Formulário',
-                        'ᵇᵒⁿᶦᶠᶦᶜᵃᶜᵃ̃ᵒ 🤏',
-                        'Anota na cabeça',
-                    ]
-        
-        self.title(rd.choice(self.titles))
+        try:
+            self.txtFile = f"{self.caminhoArquivo}\\TXTs\\{month}\\{datetime.today().strftime('%d-%b')}.txt"
+            open(self.txtFile, 'x+')
+            print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs\\{month}")
+        except:
+            print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs\\{month}")
+
 
         self.minsize(900, 380) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
         self.maxsize(1500, 380)
