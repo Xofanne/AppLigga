@@ -511,7 +511,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.entry_Obs = ctk.CTkEntry(self, textvariable=Dados.Opcionais.OBS, justify="center", corner_radius=10, width=200, height=28)
         self.entry_Obs.grid(row=1, column=1, pady=2, padx=2, sticky='ew')
 
-        self.button_config = ctk.CTkButton(self, text=f"Matrícula: \nEntrada: ", fg_color="transparent", command=lambda: self.Configuracoes(master, Dados), height=40)
+        self.button_config = ctk.CTkButton(self, text=f"Matrícula: {Dados.Operador.Matricula.get()}\nEntrada: {Dados.Operador.Entrada.get()}", fg_color="transparent", command=lambda: self.Configuracoes(master, Dados), height=40)
         self.button_config.grid(row=0, column=2, pady=(10, 2), padx=(2, 10), sticky='ew')
 
         self.button_TXT = ctk.CTkButton(self, text="Arquivo de\ntexto de hoje", fg_color="transparent", command=lambda: self.AbrirTxt(master))
@@ -583,7 +583,7 @@ class MainApp(ctk.CTk):
             with open('_internal/names.json', 'r', encoding="utf8") as names:
                 names_dados = json.load(names)
                 self.title(rd.choice(names_dados.get('names')))
-                
+
         print('''\n\n//        :::        ::::::::::: ::::::::   ::::::::      :::                       
 //       :+:            :+:    :+:    :+: :+:    :+:   :+: :+:                      
 //      +:+            +:+    +:+        +:+         +:+   +:+                      
@@ -639,6 +639,17 @@ class MainApp(ctk.CTk):
     def CriaDados(self):
 
         self.Dados = Dados(self)
+
+        try:
+            with open('dadosOperador.json', 'r', encoding="utf8") as file:
+                dados = json.load(file)
+                self.Dados.Operador.Matricula.set(dados.get('Matricula'))
+                self.Dados.Operador.Entrada.set(dados.get('Entrada'))
+        except:
+            with open('_internal/dadosOperador.json', 'r', encoding="utf8") as file:
+                dados = json.load(file)
+                self.Dados.Operador.Matricula.set(dados.get('Matricula'))
+                self.Dados.Operador.Entrada.set(dados.get('Entrada'))
 
         self.newTab = TabViewDados(self, self.Dados)
         self.newTab.configure(width=575)
@@ -786,7 +797,7 @@ class MainApp(ctk.CTk):
 
         with open(self.txtFile, 'a') as txt:
             txt.write("\n\n# # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # #\n\n")
-            txt.write("---VENDA---\n\n")
+            txt.write(f"---VENDA---\n\n")
             for x in self.listaDeDados:
                 try:
                     if str(x.get()) != "":
@@ -799,6 +810,21 @@ class MainApp(ctk.CTk):
                     txt.write(str(x))
                     txt.write("\n")
         
+        try:
+            with open('dadosOperador.json', 'r+', encoding="utf8") as file:
+                dados = json.load(file)
+                dados['Matricula'] = self.Dados.Operador.Matricula.get()
+                dados['Entrada'] = self.Dados.Operador.Entrada.get()
+                file.seek(0)
+                json.dump(dados, file)
+        except:
+            with open('_internal/dadosOperador.json', 'r+', encoding="utf8") as file:
+                dados = json.load(file)
+                dados['Matricula'] = self.Dados.Operador.Matricula.get()
+                dados['Entrada'] = self.Dados.Operador.Entrada.get()
+                file.seek(0)
+                json.dump(dados, file)
+
         mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
         
         for x in self.listaDeDados:
