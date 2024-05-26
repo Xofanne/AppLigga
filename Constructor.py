@@ -699,21 +699,21 @@ class MainApp(ctk.CTk):
         except:
             print(f"Pasta de textos já existe em -> {self.caminhoArquivo}")
 
-        month = datetime.today().strftime('%B')
+        month = datetime.today().strftime('%B-%Y')
 
         try:
-            mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}")
+            mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}")
             print(f"Pasta de textos do Mês criado em -> {self.caminhoArquivo}\\TXTs")
         except:
             print(f"Pasta do Mês já existe em -> {self.caminhoArquivo}\\TXTs")
 
 
         try:
-            self.txtFile = f"{self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}\\{datetime.today().strftime('%d-%b')}.txt"
+            self.txtFile = f"{self.caminhoArquivo}\\TXTs\\{month}\\{datetime.today().strftime('%d-%b')}.txt"
             open(self.txtFile, 'x+')
-            print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}")
+            print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs\\{month}")
         except:
-            print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}")
+            print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs\\{month}")
 
 
         self.minsize(900, 330) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
