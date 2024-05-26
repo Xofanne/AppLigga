@@ -709,11 +709,11 @@ class MainApp(ctk.CTk):
 
 
         try:
-            self.txtFile = f"{self.caminhoArquivo}\\TXTs\\{month}\\{datetime.today().strftime('%d-%b')}.txt"
+            self.txtFile = f"{self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}\\{datetime.today().strftime('%d-%b')}.txt"
             open(self.txtFile, 'x+')
-            print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs\\{month}")
+            print(f"Arquivo de texto criado em -> {self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}")
         except:
-            print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs\\{month}")
+            print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}")
 
 
         self.minsize(900, 330) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
