@@ -702,7 +702,7 @@ class MainApp(ctk.CTk):
         month = datetime.today().strftime('%B')
 
         try:
-            mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}")
+            mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}-{datetime.today().strftime('%Y')}")
             print(f"Pasta de textos do Mês criado em -> {self.caminhoArquivo}\\TXTs")
         except:
             print(f"Pasta do Mês já existe em -> {self.caminhoArquivo}\\TXTs")
