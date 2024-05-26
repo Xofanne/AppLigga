@@ -5,7 +5,7 @@ a = Analysis(
     ['Constructor.py'],
     pathex=[],
     binaries=[],
-    datas=[('dark-blue.json', '.'), ('names.json', '.'), ('dadosOperador.json', '.')],
+    datas=[('dark-blue.json', '.'), ('names.json', '.'), ('dadosOperador.json', '.'), ('notf.wav', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

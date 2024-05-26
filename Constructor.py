@@ -1,14 +1,15 @@
 import customtkinter as ctk
 import locale
-import os
+from os import mkdir
 from datetime import datetime
-import pathlib
+from pathlib import Path
 from brazilcep import get_address_from_cep, exceptions
 import MontaForm as mf
 import webbrowser as wb
-import time
-import random as rd
+from time import sleep
+from random import choice
 import json
+from playsound import playsound
 
 class Dados():
     def __init__(self, master) -> None:
@@ -110,44 +111,44 @@ class TabViewDados(ctk.CTkTabview):
 
         ### Linha 1 / CPF e Nome
         self.label_CPF_CPF = ctk.CTkLabel(self.tab(self.TabCPF), text="CPF")
-        self.label_CPF_CPF.grid(row=0, column=0, sticky='e', pady=(20, 3), padx=5)
+        self.label_CPF_CPF.grid(row=0, column=0, sticky='e', pady=(20, 1), padx=2)
 
         self.entry_CPF_CPF = ctk.CTkEntry(self.tab(self.TabCPF), textvariable=Dados.CPF.CPF, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CPF_CPF.grid(row=0, column=1, sticky='ew', pady=(20, 3), padx=5)
+        self.entry_CPF_CPF.grid(row=0, column=1, sticky='ew', pady=(20, 1), padx=2)
 
         self.label_CPF_Nome = ctk.CTkLabel(self.tab(self.TabCPF), text="Nome")
-        self.label_CPF_Nome.grid(row=0, column=3, sticky='e', pady=(20, 3), padx=5)
+        self.label_CPF_Nome.grid(row=0, column=3, sticky='e', pady=(20, 1), padx=2)
 
         self.entry_CPF_Nome = ctk.CTkEntry(self.tab(self.TabCPF), textvariable=Dados.Cliente.Nome, justify="center", corner_radius=10, height=28)
-        self.entry_CPF_Nome.grid(row=0, column=4, sticky='ew', pady=(20, 3), padx=5)
+        self.entry_CPF_Nome.grid(row=0, column=4, sticky='ew', pady=(20, 1), padx=2)
         ### -------- ###
 
         ### Linha 2 / Nascimento e nome da mãe
-        self.label_CPF_Nasc = ctk.CTkLabel(self.tab(self.TabCPF), text="Data de\nnasc")
-        self.label_CPF_Nasc.grid(row=1, column=0, sticky='e', pady=3, padx=5)
+        self.label_CPF_Nasc = ctk.CTkLabel(self.tab(self.TabCPF), text="Data de\nnasc", anchor="e")
+        self.label_CPF_Nasc.grid(row=1, column=0, sticky='e', pady=1, padx=2)
 
         self.entry_CPF_Nasc = ctk.CTkEntry(self.tab(self.TabCPF), textvariable=Dados.CPF.DataDeNascimento, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CPF_Nasc.grid(row=1, column=1, sticky='ew', pady=3, padx=5)
+        self.entry_CPF_Nasc.grid(row=1, column=1, sticky='ew', pady=1, padx=2)
 
-        self.label_CPF_Mae = ctk.CTkLabel(self.tab(self.TabCPF), text="Nome da\nmãe")
-        self.label_CPF_Mae.grid(row=1, column=3, sticky='e', pady=3, padx=5)
+        self.label_CPF_Mae = ctk.CTkLabel(self.tab(self.TabCPF), text="Nome da\nmãe", anchor='e')
+        self.label_CPF_Mae.grid(row=1, column=3, sticky='e', pady=1, padx=2)
 
         self.entry_CPF_Mae = ctk.CTkEntry(self.tab(self.TabCPF), textvariable=Dados.CPF.NomeDaMae, justify="center", corner_radius=10, height=28)
-        self.entry_CPF_Mae.grid(row=1, column=4, sticky='ew', pady=3, padx=5)
+        self.entry_CPF_Mae.grid(row=1, column=4, sticky='ew', pady=1, padx=2)
         ### -------- ###
 
         ### Linha 3 / Telefone e email
-        self.label_CPF_Telefone = ctk.CTkLabel(self.tab(self.TabCPF), text="Telefone")
-        self.label_CPF_Telefone.grid(row=2, column=0, sticky='e', pady=3, padx=5)
+        self.label_CPF_Telefone = ctk.CTkLabel(self.tab(self.TabCPF), text="Tel")
+        self.label_CPF_Telefone.grid(row=2, column=0, sticky='e', pady=1, padx=2)
 
         self.entry_CPF_Telefone = ctk.CTkEntry(self.tab(self.TabCPF), textvariable=Dados.Cliente.Telefone, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CPF_Telefone.grid(row=2, column=1, sticky='ew', pady=3, padx=5)
+        self.entry_CPF_Telefone.grid(row=2, column=1, sticky='ew', pady=1, padx=2)
 
         self.label_CPF_Email = ctk.CTkLabel(self.tab(self.TabCPF), text="Email")
-        self.label_CPF_Email.grid(row=2, column=3, sticky='e', pady=3, padx=5)
+        self.label_CPF_Email.grid(row=2, column=3, sticky='e', pady=1, padx=2)
 
         self.entry_CPF_Email = ctk.CTkEntry(self.tab(self.TabCPF), textvariable=Dados.Cliente.Email, justify="center", corner_radius=10, height=28)
-        self.entry_CPF_Email.grid(row=2, column=4, sticky='ew', pady=3, padx=5)
+        self.entry_CPF_Email.grid(row=2, column=4, sticky='ew', pady=1, padx=2)
         ### -------- ###
 
         ### FIM TAB CPF ###
@@ -156,73 +157,73 @@ class TabViewDados(ctk.CTkTabview):
 
         ### Linha 1 / CNPJ e Nome fantasia
         self.label_CNPJ_CNPJ = ctk.CTkLabel(self.tab(self.TabCNPJ), text=self.TabCNPJ)
-        self.label_CNPJ_CNPJ.grid(row=0, column=0, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_CNPJ.grid(row=0, column=0, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_CNPJ = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.CNPJ.CNPJ, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CNPJ_CNPJ.grid(row=0, column=1, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_CNPJ.grid(row=0, column=1, columnspan=3, sticky='ew', pady=1, padx=2)
 
-        self.label_CNPJ_NomeFantasia = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Nome\nfantasia")
-        self.label_CNPJ_NomeFantasia.grid(row=0, column=3, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_NomeFantasia = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Nome\nfantasia", anchor="e")
+        self.label_CNPJ_NomeFantasia.grid(row=0, column=4, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_NomeFantasia = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.CNPJ.NomeFantasia, justify="center", corner_radius=10, height=28)
-        self.entry_CNPJ_NomeFantasia.grid(row=0, column=4, sticky='ew', pady=2, padx=4, columnspan=3)
+        self.entry_CNPJ_NomeFantasia.grid(row=0, column=5, sticky='ew', pady=1, padx=2, columnspan=2)
         ### -------- ###
 
         ### Linha 2 / Razão social
-        self.label_CNPJ_RazaoSocial = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Razão\nsocial")
-        self.label_CNPJ_RazaoSocial.grid(row=1, column=0, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_RazaoSocial = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Razão\nsocial", anchor='e')
+        self.label_CNPJ_RazaoSocial.grid(row=1, column=0, sticky='e', pady=(1, 9), padx=2)
 
         self.entry_CNPJ_RazaoSocial = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.CNPJ.RazaoSocial, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CNPJ_RazaoSocial.grid(row=1, column=1, sticky='ew', pady=2, padx=4, columnspan=6)
+        self.entry_CNPJ_RazaoSocial.grid(row=1, column=1, sticky='ew', pady=(1, 9), padx=2, columnspan=6)
         ### -------- ###
 
         ### Linha 3 / Contato principal
-        self.label_CNPJ_Contato = ctk.CTkLabel(self.tab(self.TabCNPJ), text='Contato')
-        self.label_CNPJ_Contato.grid(row=2, column=0, sticky='sw', pady=2, padx=4, columnspan=2)
+        # self.label_CNPJ_Contato = ctk.CTkLabel(self.tab(self.TabCNPJ), text='Contato')
+        # self.label_CNPJ_Contato.grid(row=2, column=0, sticky='sw', pady=1, padx=4, columnspan=2)
 
         self.label_CNPJ_Nome = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Nome")
-        self.label_CNPJ_Nome.grid(row=3, column=0, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_Nome.grid(row=2, column=0, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_Nome = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.Cliente.Nome, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CNPJ_Nome.grid(row=3, column=1, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_Nome.grid(row=2, column=1, sticky='ew', pady=1, padx=2)
 
-        self.label_CNPJ_Telefone = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Telefone")
-        self.label_CNPJ_Telefone.grid(row=3, column=3, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_Telefone = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Tel")
+        self.label_CNPJ_Telefone.grid(row=2, column=3, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_Telefone = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.Cliente.Telefone, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CNPJ_Telefone.grid(row=3, column=4, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_Telefone.grid(row=2, column=4, sticky='ew', pady=1, padx=2)
 
         self.label_CNPJ_Email = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Email")
-        self.label_CNPJ_Email.grid(row=3, column=5, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_Email.grid(row=2, column=5, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_Email = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.Cliente.Email, justify="center", corner_radius=10, height=28)
-        self.entry_CNPJ_Email.grid(row=3, column=6, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_Email.grid(row=2, column=6, sticky='ew', pady=1, padx=2)
         ### -------- ###
 
         ### Linha 3 / Contato financeiro
         self.label_CNPJ_Financeiro = ctk.CTkLabel(self.tab(self.TabCNPJ), text='Contato financeiro')
-        self.label_CNPJ_Financeiro.grid(row=4, column=0, sticky='sw', pady=2, padx=4, columnspan=2)
+        self.label_CNPJ_Financeiro.grid(row=4, column=0, sticky='sw', pady=1, padx=4, columnspan=2)
 
         self.button_CNPJ_Copia = ctk.CTkButton(self.tab(self.TabCNPJ), text='Copiar dados do contato', command=lambda: self.CopiaDados(Dados))
-        self.button_CNPJ_Copia.grid(row=4, column=6, sticky='ew', pady=2, padx=4)
+        self.button_CNPJ_Copia.grid(row=4, column=6, sticky='ew', pady=1, padx=4)
 
         self.label_CNPJ_Nome_Financeiro = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Nome")
-        self.label_CNPJ_Nome_Financeiro.grid(row=5, column=0, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_Nome_Financeiro.grid(row=5, column=0, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_Nome_Financeiro = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.CNPJ.FinanceiroNome, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CNPJ_Nome_Financeiro.grid(row=5, column=1, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_Nome_Financeiro.grid(row=5, column=1, sticky='ew', pady=1, padx=2)
 
-        self.label_CNPJ_Telefone_Financeiro = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Telefone")
-        self.label_CNPJ_Telefone_Financeiro.grid(row=5, column=3, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_Telefone_Financeiro = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Tel")
+        self.label_CNPJ_Telefone_Financeiro.grid(row=5, column=3, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_Telefone_Financeiro = ctk.CTkEntry(self.tab(self.TabCNPJ),textvariable=Dados.CNPJ.FinanceiroTelefone, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CNPJ_Telefone_Financeiro.grid(row=5, column=4, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_Telefone_Financeiro.grid(row=5, column=4, sticky='ew', pady=1, padx=2)
 
         self.label_CNPJ_Email_Financeiro = ctk.CTkLabel(self.tab(self.TabCNPJ), text="Email")
-        self.label_CNPJ_Email_Financeiro.grid(row=5, column=5, sticky='e', pady=2, padx=4)
+        self.label_CNPJ_Email_Financeiro.grid(row=5, column=5, sticky='e', pady=1, padx=2)
 
         self.entry_CNPJ_Email_Financeiro = ctk.CTkEntry(self.tab(self.TabCNPJ), textvariable=Dados.CNPJ.FinanceiroEmail, justify="center", corner_radius=10, height=28)
-        self.entry_CNPJ_Email_Financeiro.grid(row=5, column=6, sticky='ew', pady=2, padx=4)
+        self.entry_CNPJ_Email_Financeiro.grid(row=5, column=6, sticky='ew', pady=1, padx=2)
         ### -------- ###
         
         self.valida(Dados)
@@ -252,37 +253,37 @@ class FrameCEP(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=5)
 
         self.label_CEP = ctk.CTkLabel(self, text='CEP')
-        self.label_CEP.grid(row=0, column=0, sticky='e', padx=(20, 2), pady=(20, 3))
+        self.label_CEP.grid(row=0, column=0, sticky='e', padx=(20, 2), pady=(5, 1))
 
         self.entry_CEP = ctk.CTkEntry(self, textvariable=Dados.Cliente.CEP, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CEP.grid(row=0, column=1, padx=(5, 200), pady=(20, 3), sticky='ew')
+        self.entry_CEP.grid(row=0, column=1, padx=(5, 200), pady=(5, 1), sticky='ew')
 
         self.label_Rua = ctk.CTkLabel(self, text='Rua')
-        self.label_Rua.grid(row=1, column=0, sticky='e', padx=(20, 2), pady=3)
+        self.label_Rua.grid(row=1, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Rua = ctk.CTkEntry(self, textvariable=Dados.Cliente.Rua, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Rua.grid(row=1, column=1, padx=5, pady=5, sticky='ew')
+        self.entry_Rua.grid(row=1, column=1, padx=5, pady=1, sticky='ew')
 
         self.label_Numero = ctk.CTkLabel(self, text='Número')
-        self.label_Numero.grid(row=2, column=0, sticky='e', padx=(20, 2), pady=3)
+        self.label_Numero.grid(row=2, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Numero = ctk.CTkEntry(self, textvariable=Dados.Cliente.Numero, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Numero.grid(row=2, column=1, padx=(5, 100), pady=3, sticky='ew')
+        self.entry_Numero.grid(row=2, column=1, padx=(5, 100), pady=1, sticky='ew')
 
         self.label_Complemento = ctk.CTkLabel(self, text='Comp')
-        self.label_Complemento.grid(row=3, column=0, sticky='e', padx=(20, 2), pady=3)
+        self.label_Complemento.grid(row=3, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Complemento = ctk.CTkEntry(self, textvariable=Dados.Cliente.Complemento, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Complemento.grid(row=3, column=1, padx=(5, 100), pady=3, sticky='ew')
+        self.entry_Complemento.grid(row=3, column=1, padx=(5, 100), pady=1, sticky='ew')
 
         self.label_Cidade = ctk.CTkLabel(self, text='Cidade')
-        self.label_Cidade.grid(row=4, column=0, sticky='e', padx=(20, 2), pady=3)
+        self.label_Cidade.grid(row=4, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Cidade = ctk.CTkEntry(self, textvariable=Dados.Cliente.Cidade, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Cidade.grid(row=4, column=1, padx=(5, 100), pady=3, sticky='ew')
+        self.entry_Cidade.grid(row=4, column=1, padx=(5, 100), pady=1, sticky='ew')
 
         self.button_Busca = ctk.CTkButton(self, text="Buscar CEP", command=lambda: self.PesquisarCep(Dados))
-        self.button_Busca.grid(row=5, column=0, columnspan=2, sticky='new', pady=(10, 2), padx=10)
+        self.button_Busca.grid(row=5, column=0, columnspan=2, sticky='new', pady=(5, 1), padx=10)
 
     def PesquisarCep(self, Dados):
         try:
@@ -331,38 +332,38 @@ class TabViewAdicionais(ctk.CTkTabview):
 
         ### TAB LIGGA ###
         self.checkbox_Ligga_HBO = ctk.CTkCheckBox(self.tab(self.TabLigga), text="HBO", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_HBO))
-        self.checkbox_Ligga_HBO.grid(row=0, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Ligga_HBO.grid(row=0, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
         self.checkbox_Ligga_Paramount = ctk.CTkCheckBox(self.tab(self.TabLigga), text="Paramout", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_Paramount))
-        self.checkbox_Ligga_Paramount.grid(row=1, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Ligga_Paramount.grid(row=1, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
         self.checkbox_Ligga_Mesh = ctk.CTkCheckBox(self.tab(self.TabLigga), text="Mesh", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_Mesh))
-        self.checkbox_Ligga_Mesh.grid(row=2, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Ligga_Mesh.grid(row=2, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
         self.checkbox_Ligga_Seguro = ctk.CTkCheckBox(self.tab(self.TabLigga), text="Seguro Residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_Seguro))
-        self.checkbox_Ligga_Seguro.grid(row=3, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Ligga_Seguro.grid(row=3, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         ### FIM TAB LIGGA ###
 
         ### TAB NOVA ###
         self.checkbox_Nova_Seguro = ctk.CTkCheckBox(self.tab(self.TabNova), text="Seguro Residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Seguro))
-        self.checkbox_Nova_Seguro.grid(row=0, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Nova_Seguro.grid(row=0, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
         self.checkbox_Nova_Rastreamento = ctk.CTkCheckBox(self.tab(self.TabNova), text="Rastreamento de veiculo", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Rastreamento))
-        self.checkbox_Nova_Rastreamento.grid(row=1, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Nova_Rastreamento.grid(row=1, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
         self.checkbox_Nova_Monitoramento = ctk.CTkCheckBox(self.tab(self.TabNova), text="Monitoramento residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Monitoramento))
-        self.checkbox_Nova_Monitoramento.grid(row=2, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_Nova_Monitoramento.grid(row=2, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         ### FIM TAB NOVA ###
 
         ### TAB RN ###
         self.checkbox_RN_HBO = ctk.CTkCheckBox(self.tab(self.TabRN), text="HBO", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_HBO))
-        self.checkbox_RN_HBO.grid(row=0, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_RN_HBO.grid(row=0, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         
         self.checkbox_RN_Paramount = ctk.CTkCheckBox(self.tab(self.TabRN), text="Paramout", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_Paramount))
-        self.checkbox_RN_Paramount.grid(row=1, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_RN_Paramount.grid(row=1, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         
         self.checkbox_RN_Seguro = ctk.CTkCheckBox(self.tab(self.TabRN), text="Seguro Residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_Seguro))
-        self.checkbox_RN_Seguro.grid(row=2, column=0, columnspan=2, pady=2, padx=5, sticky='w')
+        self.checkbox_RN_Seguro.grid(row=2, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
     def AdicionaRemove(self, Dados, Adicional):
         if Adicional.get() == "1":
@@ -381,23 +382,23 @@ class FrameEmpresa(ctk.CTkFrame):
         self.options_empresa = ctk.CTkOptionMenu(self, values=["Venda - Ligga", "Venda - Nova", "Rede Neutra"], variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
         self.options_empresa.set('Empresa')
         self.options_empresa.configure(width=130)
-        self.options_empresa.grid(row=0, column=0, pady=(20, 3), padx=5)
+        self.options_empresa.grid(row=0, column=0, pady=(10, 1), padx=5)
 
         self.options_velocidade = ctk.CTkOptionMenu(self, values=[], anchor='center', command=lambda x: Dados.Cliente.Velocidade.set(self.options_velocidade.get()))
         self.options_velocidade.set('Velocidade')
-        self.options_velocidade.grid(row=1, column=0, pady=3, padx=5)
+        self.options_velocidade.grid(row=1, column=0, pady=1, padx=5)
 
         self.options_Pagamento = ctk.CTkOptionMenu(self, values=["Boleto", "Débito"], anchor='center', command=lambda x: Dados.Cliente.Pagamento.set(self.options_Pagamento.get()))
         self.options_Pagamento.set('Pagamento')
-        self.options_Pagamento.grid(row=2, column=0, pady=3, padx=5)
+        self.options_Pagamento.grid(row=2, column=0, pady=1, padx=5)
 
         self.options_Vencimento = ctk.CTkOptionMenu(self, values=['1', '5', '10', '15', '20', '25'], anchor='center', command=lambda x: Dados.Cliente.Vencimento.set(self.options_Vencimento.get()))
         self.options_Vencimento.set('Vencimento')
-        self.options_Vencimento.grid(row=3, column=0, pady=3, padx=5)
+        self.options_Vencimento.grid(row=3, column=0, pady=1, padx=5)
 
         self.tabviewAdicionais = TabViewAdicionais(self, Dados)
-        self.tabviewAdicionais.configure(height=180, width=250)
-        self.tabviewAdicionais.grid(row=0, rowspan=6, column=2, pady=3, padx=(5, 0), sticky='ew')
+        self.tabviewAdicionais.configure(height=160, width=230)
+        self.tabviewAdicionais.grid(row=0, rowspan=6, column=2, pady=1, padx=(5, 0), sticky='ew')
 
     def SetAdicionais(self, adicionaisTab, Dados):
         self.ClearAdicionais(adicionaisTab, Dados)
@@ -448,28 +449,28 @@ class FrameData(ctk.CTkFrame):
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0,1,2,3), weight=1)
 
-        self.label_instalacao = ctk.CTkLabel(self, text="Data de instalação", font=('helvetica', 16, 'bold'))
-        self.label_instalacao.grid(row=0, column=0, columnspan=3, pady=(10, 5), sticky='new')
+        self.label_instalacao = ctk.CTkLabel(self, text="Data de instalação", font=('helvetica', 14, 'bold'))
+        self.label_instalacao.grid(row=0, column=0, columnspan=3, pady=2, padx=1, sticky='new')
 
         self.option_Mes = ctk.CTkOptionMenu(self, variable=Dados.Cliente.MesInstalacao, values=self.QTDEMES, anchor="center", command=lambda x: self.SetDias(self.option_Mes.get()))
         self.option_Mes.set('Mes')
         self.option_Mes.configure(width=70)
-        self.option_Mes.grid(row=1, column=0, pady=(0, 10), padx= 2, sticky="se")
+        self.option_Mes.grid(row=1, column=0, pady=(0, 5), padx= 2, sticky="se")
 
         self.option_Dia = ctk.CTkOptionMenu(self, variable=Dados.Cliente.DiaInstalacao, values=[], anchor="center")
         self.option_Dia.set('Dia')
         self.option_Dia.configure(width=70)
-        self.option_Dia.grid(row=1, column=1, pady=(0, 10), padx= 2, sticky="sw")
+        self.option_Dia.grid(row=1, column=1, pady=(0, 5), padx= 2, sticky="sw")
 
         self.option_Ano = ctk.CTkOptionMenu(self, variable=Dados.Cliente.AnoInstalacao, values=self.ANO, anchor="center")
         self.option_Ano.set('2024')
         self.option_Ano.configure(width=70)
-        self.option_Ano.grid(row=2, column=0, columnspan=2, pady=(0, 10), padx= 2, sticky="n")
+        self.option_Ano.grid(row=2, column=0, columnspan=2, pady=(0, 5), padx= 2, sticky="n")
 
         self.option_Periodo = ctk.CTkOptionMenu(self, variable=Dados.Cliente.Periodo, values=["Manhã", "Tarde"], anchor="center")
         self.option_Periodo.set('Período')
         self.option_Periodo.configure(width=140)
-        self.option_Periodo.grid(row=3, column=0, columnspan=2, pady=(2, 20), sticky='n')
+        self.option_Periodo.grid(row=3, column=0, columnspan=2, pady=(1, 10), sticky='n')
 
 
     def SetDias(self, x):
@@ -492,7 +493,7 @@ class FrameConfirm(ctk.CTkFrame):
     def __init__(self, master, Dados, Empresa):
         super().__init__(master)
 
-        self.grid_columnconfigure((0, 1, 2), weight=1)
+        self.grid_columnconfigure((0, 1, 2, 3), weight=1)
         self.grid_rowconfigure((0, 1), weight=1)
         self.grid_rowconfigure(2, weight=2)
 
@@ -500,28 +501,34 @@ class FrameConfirm(ctk.CTkFrame):
         self.ENTRADA = ["Receptivo", 'Ativo', "Whatsapp"]
 
         self.label_IDL = ctk.CTkLabel(self, text="ID da \nligação")
-        self.label_IDL.grid(row=0, column=0, pady=(10, 2), padx=(10, 2), sticky='nsew')
+        self.label_IDL.grid(row=0, column=0, pady=(5, 1), padx=(5, 1), sticky='nsew')
 
         self.entry_IDL = ctk.CTkEntry(self, textvariable=Dados.Opcionais.IDL, justify="center", corner_radius=10, height=28, width=200)
-        self.entry_IDL.grid(row=0, column=1, pady=(10, 2), padx=5, sticky='ew')
+        self.entry_IDL.grid(row=0, column=1, columnspan=2, pady=(5, 1), padx=5, sticky='ew')
 
         self.label_Obs = ctk.CTkLabel(self, text="Obs")
-        self.label_Obs.grid(row=1, column=0, pady=2, padx=2)
+        self.label_Obs.grid(row=1, column=0, pady=1, padx=1)
 
         self.entry_Obs = ctk.CTkEntry(self, textvariable=Dados.Opcionais.OBS, justify="center", corner_radius=10, width=200, height=28)
-        self.entry_Obs.grid(row=1, column=1, pady=2, padx=2, sticky='ew')
+        self.entry_Obs.grid(row=1, column=1, columnspan=2, pady=1, padx=2, sticky='ew')
 
         self.button_config = ctk.CTkButton(self, text=f"Matrícula: {Dados.Operador.Matricula.get()}\nEntrada: {Dados.Operador.Entrada.get()}", fg_color="transparent", command=lambda: self.Configuracoes(master, Dados), height=40)
-        self.button_config.grid(row=0, column=2, pady=(10, 2), padx=(2, 10), sticky='ew')
+        self.button_config.grid(row=0, column=3, pady=(5, 1), padx=(1, 5), sticky='ew')
 
         self.button_TXT = ctk.CTkButton(self, text="Arquivo de\ntexto de hoje", fg_color="transparent", command=lambda: self.AbrirTxt(master))
-        self.button_TXT.grid(row=1, column=2, pady=2, padx=(2, 10), sticky='new')
+        self.button_TXT.grid(row=1, column=3, pady=1, padx=(1, 5), sticky='new')
 
         self.button_TXT = ctk.CTkButton(self, text="Pasta de\narquivos txt", fg_color="transparent", command=lambda: self.AbrirPasta(master))
-        self.button_TXT.grid(row=2, column=2, pady=(2, 10), padx=(2, 10), sticky='snew')
+        self.button_TXT.grid(row=2, column=3, pady=(1, 5), padx=(1, 5), sticky='snew')
+
+        self.button_Pausa = ctk.CTkButton(self, text="Pausa", fg_color="transparent", command=lambda: self. CriaTimer(master))
+        self.button_Pausa.grid(row=2, column=2, pady=(1, 5), padx=5, sticky="nsew")
 
         self.button_enviar = ctk.CTkButton(self, text="Enviar", font=('helvetica', 20, 'bold'), command=lambda: master.Enviar(Empresa))
-        self.button_enviar.grid(row=2, column=0, columnspan=2, pady=(2,10), padx=10, sticky='snew')
+        self.button_enviar.grid(row=2, column=0, columnspan=2, pady=(1,5), padx=5, sticky='snew')
+
+    def CriaTimer(self, master):
+        timer = Timer(master)
 
     def AbrirTxt(self, master):
         wb.open(master.txtFile)
@@ -530,10 +537,10 @@ class FrameConfirm(ctk.CTkFrame):
     def AbrirPasta(self, master):
         try:
             '''Abre a pasta onde está o arquivo'''
-            current_directory = pathlib.Path(__file__).parent.parent.resolve()
+            current_directory = Path(__file__).parent.parent.resolve()
             wb.open(str(current_directory)+"\TXTs") 
         except:
-            current_directory = pathlib.Path(__file__).parent.resolve()
+            current_directory = Path(__file__).parent.resolve()
             wb.open(current_directory)
 
 
@@ -563,19 +570,85 @@ class FrameConfirm(ctk.CTkFrame):
         self.toplevel_configs.grab_set()
 
         self.label_Matricula = ctk.CTkLabel(self.toplevel_configs, text="Matrícula")
-        self.label_Matricula.grid(row=0, column=0, pady=(30, 8), padx=(100, 8))
+        self.label_Matricula.grid(row=0, column=0, pady=(10, 3), padx=(50, 8))
         
         self.option_matriculas = ctk.CTkOptionMenu(self.toplevel_configs, variable=Dados.Operador.Matricula, values=self.MATRICULAS, anchor="center")
-        self.option_matriculas.grid(row=0, column=1, pady=(30, 8), padx=(8, 100))
+        self.option_matriculas.grid(row=0, column=1, pady=(10, 3), padx=(8, 50))
 
         self.label_Entrada = ctk.CTkLabel(self.toplevel_configs, text="Entrada")
-        self.label_Entrada.grid(row=1, column=0, pady=8, padx=(100, 8))
+        self.label_Entrada.grid(row=1, column=0, pady=3, padx=(50, 8))
         
         self.option_Entrada = ctk.CTkOptionMenu(self.toplevel_configs, variable=Dados.Operador.Entrada, values=self.ENTRADA, anchor="center")
-        self.option_Entrada.grid(row=1, column=1, pady=8, padx=(8, 100))
+        self.option_Entrada.grid(row=1, column=1, pady=3, padx=(8, 50))
 
         self.button_confirma = ctk.CTkButton(self.toplevel_configs, text="Confirmar", command=lambda: Confirma())
-        self.button_confirma.grid(row=2, column=0, columnspan=2, pady=(8, 30), padx=100)
+        self.button_confirma.grid(row=2, column=0, columnspan=2, pady=(3, 10), padx=50)
+
+class Timer(ctk.CTkToplevel):
+
+    def __init__(self, master) -> None:
+        super().__init__(master)
+
+        self.title("Timer")
+        self.minsize(300, 100)
+        self.maxsize(300, 100)
+        self.wm_attributes('-topmost', 1)
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=3)
+
+        self.solve = ""
+        self.tempo = 0
+
+        self.attLabel(0, master)
+
+        self.label_timer = ctk.CTkLabel(self, text="", anchor='center', font=("Roboto", 30, "bold"), fg_color="#cccccc", text_color="#000000")
+        self.label_timer.grid(row=0, rowspan=4, column=1)
+
+        self.button_5min = ctk.CTkButton(self, text="5 min", anchor="center", width=10, command=lambda: self.attLabel(300, master))
+        self.button_5min.grid(row=0, column=0, sticky="ew")
+
+        self.button_10min = ctk.CTkButton(self, text="10 min", anchor="center", width=10, command=lambda: self.attLabel(600, master))
+        self.button_10min.grid(row=1, column=0, sticky="ew")
+
+        self.button_20min = ctk.CTkButton(self, text="20 min", anchor="center", width=10, command=lambda: self.attLabel(1200, master))
+        self.button_20min.grid(row=2, column=0, sticky="ew")
+
+        self.button_start = ctk.CTkButton(self, text="Start", anchor="center", width=10, command=lambda: self.countdown(master))
+        self.button_start.grid(row=3, column=0, sticky="ew")
+
+    def attLabel(self, t, master):
+        self.tempo = t
+        mins, secs = divmod(self.tempo, 60)
+        timerstr = '{:02d} : {:02d}'.format(mins, secs)
+        self.label_timer = ctk.CTkLabel(self, text=f"{timerstr}", anchor="center", font=("Roboto", 40, "bold"), fg_color="#cccccc", text_color="#000000")
+        self.label_timer.grid(row=0, rowspan=4, column=1, sticky='nsew')
+        if self.solve != "":
+            master.after_cancel(self.solve)
+        return t
+
+    def countdown(self, master, *x):
+        if self.tempo > 0:
+            if self.tempo == 61:
+                try:
+                    playsound("_internal/notf.wav", False)
+                except: 
+                    playsound("notf.wav", False)
+            mins, secs = divmod(self.tempo, 60)
+            timerstr = '{:02d} : {:02d}'.format(mins, secs)
+            self.label_timer.configure(text=f"{timerstr}")
+            if self.tempo >=120:
+                self.solve = master.after(1000, lambda: self.countdown(self, master))
+                self.tempo -= 1
+            elif self.tempo < 120 and self.tempo > 60:
+                self.solve = master.after(1000, lambda: self.countdown(self, master))
+                self.label_timer.configure(fg_color="#5cd69d")
+                self.tempo -= 1
+            elif self.tempo <= 60 and self.tempo > 0:
+                self.solve = master.after(1000, lambda: self.countdown(self, master))
+                self.label_timer.configure(fg_color="#db1102")
+                self.tempo -= 1
+
 
 
 class MainApp(ctk.CTk):
@@ -592,16 +665,16 @@ class MainApp(ctk.CTk):
 
         locale.setlocale(locale.LC_NUMERIC, "C")
         
-        self.caminhoArquivo = pathlib.Path(__file__).parent.parent.resolve()
+        self.caminhoArquivo = Path(__file__).parent.parent.resolve()
 
         try:
             with open('names.json', 'r', encoding="utf8") as names:
                 names_dados = json.load(names)
-                self.title(rd.choice(names_dados.get('names')))
+                self.title(choice(names_dados.get('names')))
         except:
             with open('_internal/names.json', 'r', encoding="utf8") as names:
                 names_dados = json.load(names)
-                self.title(rd.choice(names_dados.get('names')))
+                self.title(choice(names_dados.get('names')))
 
         print('''\n\n//        :::        ::::::::::: ::::::::   ::::::::      :::                       
 //       :+:            :+:    :+:    :+: :+:    :+:   :+: :+:                      
@@ -610,7 +683,7 @@ class MainApp(ctk.CTk):
 //    +#+            +#+    +#+   +#+# +#+   +#+# +#+     +#+                       
 //   #+#            #+#    #+#    #+# #+#    #+# #+#     #+#                        
 //  ########## ########### ########   ########  ###     ###''')  
-        time.sleep(0.4)                       
+        sleep(0.4)                       
         print('''//    ::::::::::: :::::::::: :::        :::::::::: ::::::::   ::::::::    :::   ::: 
 //       :+:     :+:        :+:        :+:       :+:    :+: :+:    :+:  :+:+: :+:+: 
 //      +:+     +:+        +:+        +:+       +:+        +:+    +:+ +:+ +:+:+ +:+ 
@@ -618,10 +691,10 @@ class MainApp(ctk.CTk):
 //    +#+     +#+        +#+        +#+       +#+        +#+    +#+ +#+       +#+   
 //   #+#     #+#        #+#        #+#       #+#    #+# #+#    #+# #+#       #+#    
 //  ###     ########## ########## ########## ########   ########  ###       ###\n\n''')
-        time.sleep(1)
+        sleep(0.5)
 
         try:
-            os.mkdir(f"{self.caminhoArquivo}\\TXTs")
+            mkdir(f"{self.caminhoArquivo}\\TXTs")
             print(f"Pasta de textos criada em -> {self.caminhoArquivo}")
         except:
             print(f"Pasta de textos já existe em -> {self.caminhoArquivo}")
@@ -629,7 +702,7 @@ class MainApp(ctk.CTk):
         month = datetime.today().strftime('%B')
 
         try:
-            os.mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}")
+            mkdir(f"{self.caminhoArquivo}\\TXTs\\{month}")
             print(f"Pasta de textos do Mês criado em -> {self.caminhoArquivo}\\TXTs")
         except:
             print(f"Pasta do Mês já existe em -> {self.caminhoArquivo}\\TXTs")
@@ -643,8 +716,8 @@ class MainApp(ctk.CTk):
             print(f"Arquivo de texto de hoje já existe em -> {self.caminhoArquivo}\\TXTs\\{month}")
 
 
-        self.minsize(900, 380) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
-        self.maxsize(1500, 380)
+        self.minsize(900, 330) ## com minsize e maxsize não precisa informar o tamanho da tela, se não vai bugar
+        self.maxsize(1200, 330)
         self.grid_columnconfigure((0), weight=1)
         self.grid_columnconfigure((1), weight=1)
         self.grid_columnconfigure((2), weight=1)
@@ -653,7 +726,7 @@ class MainApp(ctk.CTk):
         self.CriaDados()
 
         self.confirmFrame = FrameConfirm(self, self.Dados, self.empresaFrame)   
-        self.confirmFrame.grid(row=1, column=2, pady=(2, 0), padx=(2, 0), sticky="nsew")
+        self.confirmFrame.grid(row=1, column=2, pady=(1, 0), padx=(1, 0), sticky="nsew")
     
     def CriaDados(self):
 
@@ -671,19 +744,19 @@ class MainApp(ctk.CTk):
                 self.Dados.Operador.Entrada.set(dados.get('Entrada'))
 
         self.newTab = TabViewDados(self, self.Dados)
-        self.newTab.configure(width=575)
-        self.newTab.grid(row=0, column=0, pady=(0, 2), padx=(0, 2), sticky='ew', columnspan=2)
+        self.newTab.configure(width=575, height=210)
+        self.newTab.grid(row=0, column=0, pady=(0, 1), padx=(0, 1), sticky='ew', columnspan=2)
 
         self.cepFrame = FrameCEP(self, self.Dados)
-        self.cepFrame.grid(row=0, column=2, pady=(0, 2), padx=(2, 0), sticky='nsew', columnspan=2)
+        self.cepFrame.grid(row=0, column=2, pady=(0, 1), padx=(1, 0), sticky='nsew', columnspan=2)
 
         self.empresaFrame = FrameEmpresa(self, self.Dados)
-        self.empresaFrame.configure(width=380)
-        self.empresaFrame.grid(row=1, column=0, pady=(2, 0), padx=(0, 2), sticky='nsew')
+        self.empresaFrame.configure(width=380, height=140)
+        self.empresaFrame.grid(row=1, column=0, pady=(1, 0), padx=(0, 1), sticky='nsew')
 
         self.dataFrame = FrameData(self, self.Dados)
         self.dataFrame.configure(width=100)
-        self.dataFrame.grid(row=1, column=1, pady=(2, 0), padx=2, sticky='nsew')
+        self.dataFrame.grid(row=1, column=1, pady=(1, 0), padx=1, sticky='nsew')
     
     def TopLevelError(self, *args: str):
 
