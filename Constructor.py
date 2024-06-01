@@ -52,7 +52,7 @@ class DadosCliente():
 
         self.Empresa = ctk.StringVar(name="Empresa")
         self.Velocidade = ctk.StringVar(name="Velocidade")
-        self.Pagamento = ctk.StringVar(name="Pagemento")
+        self.Pagamento = ctk.StringVar(name="Pagamento")
         self.Vencimento = ctk.StringVar(name="Vencimento")
         self.Adicionais : list = []
 
@@ -555,6 +555,7 @@ class FrameConfirm(ctk.CTkFrame):
                     dados['Entrada'] = Dados.Operador.Entrada.get()
                     file.seek(0)
                     json.dump(dados, file)
+                    file.truncate()
             except:
                 with open('_internal/dadosOperador.json', 'r+', encoding="utf8") as file:
                     dados = json.load(file)
@@ -562,6 +563,7 @@ class FrameConfirm(ctk.CTkFrame):
                     dados['Entrada'] = Dados.Operador.Entrada.get()
                     file.seek(0)
                     json.dump(dados, file)
+                    file.truncate()
             self.toplevel_configs.destroy()
 
         self.toplevel_configs = ctk.CTkToplevel()
@@ -682,8 +684,7 @@ class MainApp(ctk.CTk):
 //     +#+            +#+    :#:        :#:        +#++:++#++:                      
 //    +#+            +#+    +#+   +#+# +#+   +#+# +#+     +#+                       
 //   #+#            #+#    #+#    #+# #+#    #+# #+#     #+#                        
-//  ########## ########### ########   ########  ###     ###''')  
-        sleep(0.4)                       
+//  ########## ########### ########   ########  ###     ###''')            
         print('''//    ::::::::::: :::::::::: :::        :::::::::: ::::::::   ::::::::    :::   ::: 
 //       :+:     :+:        :+:        :+:       :+:    :+: :+:    :+:  :+:+: :+:+: 
 //      +:+     +:+        +:+        +:+       +:+        +:+    +:+ +:+ +:+:+ +:+ 
@@ -811,7 +812,6 @@ class MainApp(ctk.CTk):
                     self.Dados.Cliente.Telefone,
                     self.Dados.Cliente.Email,
                     self.Dados.CNPJ.RazaoSocial,
-                    self.Dados.CNPJ.NomeFantasia,
                     self.Dados.CNPJ.FinanceiroNome,
                     self.Dados.CNPJ.FinanceiroTelefone,
                     self.Dados.CNPJ.FinanceiroEmail,
@@ -889,7 +889,7 @@ class MainApp(ctk.CTk):
 
         with open(self.txtFile, 'a') as txt:
             txt.write("\n\n# # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # #\n\n")
-            txt.write(f"---VENDA---\n\n")
+            txt.write(f"---VENDA--- {self.Dados.Cliente.Empresa.get()}\n\n")
             for x in self.listaDeDados:
                 try:
                     if str(x.get()) != "":
