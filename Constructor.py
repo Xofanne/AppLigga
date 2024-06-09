@@ -290,6 +290,8 @@ class FrameCEP(ctk.CTkFrame):
             address = get_address_from_cep(Dados.Cliente.CEP.get())
             Dados.Cliente.Rua.set(value=f"{address['street']}")
             Dados.Cliente.Cidade.set(value=f"{address['city']} / {address['uf']}")
+            Dados.Cliente.Numero.set(value="")
+            Dados.Cliente.Complemento.set(value="")
             # {'district': 'Bairro', 'cep': 'xxxxx-xxx', 'city': 'Cidade', 'street': 'Rua', 'uf': 'Estado', 'complement': '?'}
         except ValueError as ve:
             Dados.Cliente.Rua.set(value=f"CEP não pode estar vazio")
@@ -515,23 +517,59 @@ class FrameConfirm(ctk.CTkFrame):
         self.button_config = ctk.CTkButton(self, text=f"Matrícula: {Dados.Operador.Matricula.get()}\nEntrada: {Dados.Operador.Entrada.get()}", fg_color="transparent", command=lambda: self.Configuracoes(master, Dados), height=40)
         self.button_config.grid(row=0, column=3, pady=(5, 1), padx=(1, 5), sticky='ew')
 
-        self.button_TXT = ctk.CTkButton(self, text="Arquivo de\ntexto de hoje", fg_color="transparent", command=lambda: self.AbrirTxt(master))
-        self.button_TXT.grid(row=1, column=3, pady=1, padx=(1, 5), sticky='new')
+        self.button_misc = ctk.CTkButton(self, text="TXTs e\npausa", fg_color="transparent", command=lambda: self.ToplvlMisc(master))
+        self.button_misc.grid(row=1, column=3, pady=1, padx=(1, 5), sticky='new')
 
-        self.button_TXT = ctk.CTkButton(self, text="Pasta de\narquivos txt", fg_color="transparent", command=lambda: self.AbrirPasta(master))
-        self.button_TXT.grid(row=2, column=3, pady=(1, 5), padx=(1, 5), sticky='snew')
+        self.button_DeletaDados = ctk.CTkButton(self, text="Limpar dados", fg_color="transparent", command=lambda: self.LimpaDados(master))
+        self.button_DeletaDados.grid(row=2, column=3, pady=(1, 5), padx=(1, 5), sticky='snew')
 
-        self.button_Pausa = ctk.CTkButton(self, text="Pausa", fg_color="transparent", command=lambda: self. CriaTimer(master))
-        self.button_Pausa.grid(row=2, column=2, pady=(1, 5), padx=5, sticky="nsew")
+
+        self.button_enviaTXT = ctk.CTkButton(self, text="Enviar\nsomente txt", fg_color="transparent", command=lambda: master.InsertInTXT())
+        self.button_enviaTXT.grid(row=2, column=2, pady=(1, 5), padx=5, sticky="nsew")
 
         self.button_enviar = ctk.CTkButton(self, text="Enviar", font=('helvetica', 20, 'bold'), command=lambda: master.Enviar(Empresa))
         self.button_enviar.grid(row=2, column=0, columnspan=2, pady=(1,5), padx=5, sticky='snew')
+
+
+    def LimpaDados(self, master):
+
+        self.confirmLimpaDados = ctk.CTkToplevel(self)
+
+        self.label_alert = ctk.CTkLabel(self.confirmLimpaDados, text="DESEJA LIMPAR TODOS OS DADOS?", font=("Helvetica", 15, "bold"))
+        self.label_alert.grid(row=0, column=0, columnspan=2, padx=10, pady=5)
+
+        self.button_confirma_alert = ctk.CTkButton(self.confirmLimpaDados, text="SIM", command=lambda: Limpa(master))
+        self.button_confirma_alert.grid(row=1, column=0, padx=10, pady=5)
+
+        self.button_cancela_alert = ctk.CTkButton(self.confirmLimpaDados, text="NÃO", fg_color="transparent")
+        self.button_cancela_alert.grid(row=1, column=1, padx=10, pady=5)
+
+        def Limpa(master):
+            master.LimpaDados()
+            master.CriaDados()
+            self.confirmLimpaDados.destroy()
 
     def CriaTimer(self, master):
         timer = Timer(master)
 
     def AbrirTxt(self, master):
         wb.open(master.txtFile)
+        self.toplvlMisc.destroy()
+
+    def ToplvlMisc(self, master):
+        self.toplvlMisc = ctk.CTkToplevel(master)
+        self.toplvlMisc.title("Misc")
+        self.toplvlMisc.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+200}")
+
+        self.button_TXT = ctk.CTkButton(self.toplvlMisc, text="Arquivo de\ntexto de hoje", fg_color="transparent", command=lambda: self.AbrirTxt(master))
+        self.button_TXT.grid(row=0, column=0, pady=5, padx=(50), sticky='snew')
+
+        self.button_TXT = ctk.CTkButton(self.toplvlMisc, text="Pasta de\narquivos txt", fg_color="transparent", command=lambda: self.AbrirPasta(master))
+        self.button_TXT.grid(row=1, column=0, pady=5, padx=(50), sticky='snew')
+
+        self.button_Pausa = ctk.CTkButton(self.toplvlMisc, text="Pausa", fg_color="transparent", command=lambda: self.CriaTimer(master))
+        self.button_Pausa.grid(row=2, column=0, pady=5, padx=50, sticky="nsew")
+
 
         ### abre a pasta onde ta o arquivo
     def AbrirPasta(self, master):
@@ -542,6 +580,7 @@ class FrameConfirm(ctk.CTkFrame):
         except:
             current_directory = Path(__file__).parent.resolve()
             wb.open(current_directory)
+        self.toplvlMisc.destroy()
 
 
     def Configuracoes(self, master, Dados):
@@ -592,6 +631,7 @@ class Timer(ctk.CTkToplevel):
         super().__init__(master)
 
         self.title("Timer")
+        self.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+200}")
         self.minsize(300, 100)
         self.maxsize(300, 100)
         self.wm_attributes('-topmost', 1)
@@ -618,6 +658,7 @@ class Timer(ctk.CTkToplevel):
 
         self.button_start = ctk.CTkButton(self, text="Start", anchor="center", width=10, command=lambda: self.countdown(master))
         self.button_start.grid(row=3, column=0, sticky="ew")
+
 
     def attLabel(self, t, master):
         self.tempo = t
@@ -847,10 +888,16 @@ class MainApp(ctk.CTk):
             self.Dados.Cliente.DataInstalacao.set(value=f"{self.Dados.Cliente.AnoInstalacao.get()}-{self.Dados.Cliente.MesInstalacao.get()}-{self.Dados.Cliente.DiaInstalacao.get()}")
 
             self.InsertInTXT()
+            self.InsertForm()
+            self.LimpaDados()
 
             Empresa.ClearAdicionais(self.empresaFrame.tabviewAdicionais, self.Dados)
 
             self.CriaDados()
+    
+    def InsertForm(self):
+
+        mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
 
     def InsertInTXT(self):
 
@@ -889,7 +936,7 @@ class MainApp(ctk.CTk):
 
         with open(self.txtFile, 'a') as txt:
             txt.write("\n\n# # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # #\n\n")
-            txt.write(f"---VENDA--- {self.Dados.Cliente.Empresa.get()}\n\n")
+            txt.write(f"{self.Dados.Cliente.Empresa.get()} - {datetime.today().strftime('%X')}\n\n")
             for x in self.listaDeDados:
                 try:
                     if str(x.get()) != "":
@@ -901,9 +948,44 @@ class MainApp(ctk.CTk):
                     txt.write("Adicionais : ")
                     txt.write(str(x))
                     txt.write("\n")
-
-        mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
         
+        return
+
+    def LimpaDados(self):
+
+        if len(self.Dados.Cliente.Adicionais) == 0:
+            self.Dados.Cliente.Adicionais.append("Nenhum")
+
+        self.listaDeDados = [   
+            self.Dados.Operador.Entrada, 
+            self.Dados.CPF.CPF,
+            self.Dados.CNPJ.CNPJ,
+            self.Dados.CNPJ.NomeFantasia,
+            self.Dados.CNPJ.RazaoSocial,
+            self.Dados.Cliente.Nome,
+            self.Dados.Cliente.Telefone,
+            self.Dados.Cliente.Email,
+            self.Dados.CPF.DataDeNascimento,
+            self.Dados.CPF.NomeDaMae,
+            self.Dados.CNPJ.FinanceiroNome,
+            self.Dados.CNPJ.FinanceiroTelefone,
+            self.Dados.CNPJ.FinanceiroEmail,
+            self.Dados.Cliente.CEP,
+            self.Dados.Cliente.Rua,
+            self.Dados.Cliente.Numero,
+            self.Dados.Cliente.Complemento,
+            self.Dados.Cliente.Cidade,
+            self.Dados.Cliente.Empresa,
+            self.Dados.Cliente.Velocidade,
+            self.Dados.Cliente.Pagamento,
+            self.Dados.Cliente.Vencimento,
+            self.Dados.Cliente.Adicionais,
+            self.Dados.Cliente.DataInstalacao,
+            self.Dados.Cliente.Periodo,
+            self.Dados.Opcionais.IDL,
+            self.Dados.Opcionais.OBS,
+        ]
+
         for x in self.listaDeDados:
             if x == self.Dados.Operador.Matricula or x == self.Dados.Operador.Entrada:
                 pass
@@ -912,8 +994,6 @@ class MainApp(ctk.CTk):
                     x.set("")
                 except:
                     self.Dados.Cliente.Adicionais.clear()
-        
-        return
 
 def main() -> None:
 
