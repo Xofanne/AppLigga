@@ -524,7 +524,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.button_DeletaDados.grid(row=2, column=3, pady=(1, 5), padx=(1, 5), sticky='snew')
 
 
-        self.button_enviaTXT = ctk.CTkButton(self, text="Enviar\nsomente txt", fg_color="transparent", command=lambda: master.InsertInTXT())
+        self.button_enviaTXT = ctk.CTkButton(self, text="Enviar\nsomente txt", fg_color="transparent", command=lambda: master.InsertInTXT('Anotação'))
         self.button_enviaTXT.grid(row=2, column=2, pady=(1, 5), padx=5, sticky="nsew")
 
         self.button_enviar = ctk.CTkButton(self, text="Enviar", font=('helvetica', 20, 'bold'), command=lambda: master.Enviar(Empresa))
@@ -534,6 +534,9 @@ class FrameConfirm(ctk.CTkFrame):
     def LimpaDados(self, master):
 
         self.confirmLimpaDados = ctk.CTkToplevel(self)
+        self.confirmLimpaDados.title("Limpar")
+        self.confirmLimpaDados.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+200}")
+        self.confirmLimpaDados.grab_set()
 
         self.label_alert = ctk.CTkLabel(self.confirmLimpaDados, text="DESEJA LIMPAR TODOS OS DADOS?", font=("Helvetica", 15, "bold"))
         self.label_alert.grid(row=0, column=0, columnspan=2, padx=10, pady=5)
@@ -541,7 +544,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.button_confirma_alert = ctk.CTkButton(self.confirmLimpaDados, text="SIM", command=lambda: Limpa(master))
         self.button_confirma_alert.grid(row=1, column=0, padx=10, pady=5)
 
-        self.button_cancela_alert = ctk.CTkButton(self.confirmLimpaDados, text="NÃO", fg_color="transparent")
+        self.button_cancela_alert = ctk.CTkButton(self.confirmLimpaDados, text="NÃO", fg_color="transparent", command=lambda: self.confirmLimpaDados.destroy())
         self.button_cancela_alert.grid(row=1, column=1, padx=10, pady=5)
 
         def Limpa(master):
@@ -550,7 +553,7 @@ class FrameConfirm(ctk.CTkFrame):
             self.confirmLimpaDados.destroy()
 
     def CriaTimer(self, master):
-        timer = Timer(master)
+        Timer(master)
 
     def AbrirTxt(self, master):
         wb.open(master.txtFile)
@@ -560,6 +563,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.toplvlMisc = ctk.CTkToplevel(master)
         self.toplvlMisc.title("Misc")
         self.toplvlMisc.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+200}")
+        self.toplvlMisc.wm_attributes('-topmost', 1)
 
         self.button_TXT = ctk.CTkButton(self.toplvlMisc, text="Arquivo de\ntexto de hoje", fg_color="transparent", command=lambda: self.AbrirTxt(master))
         self.button_TXT.grid(row=0, column=0, pady=5, padx=(50), sticky='snew')
@@ -631,7 +635,7 @@ class Timer(ctk.CTkToplevel):
         super().__init__(master)
 
         self.title("Timer")
-        self.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+200}")
+        self.geometry(f"+{master.winfo_x()+500}+{master.winfo_y()+50}")
         self.minsize(300, 100)
         self.maxsize(300, 100)
         self.wm_attributes('-topmost', 1)
@@ -887,7 +891,7 @@ class MainApp(ctk.CTk):
         if self.validarpreenchimento() == True:
             self.Dados.Cliente.DataInstalacao.set(value=f"{self.Dados.Cliente.AnoInstalacao.get()}-{self.Dados.Cliente.MesInstalacao.get()}-{self.Dados.Cliente.DiaInstalacao.get()}")
 
-            self.InsertInTXT()
+            self.InsertInTXT(self.Dados.Cliente.Empresa.get())
             self.InsertForm()
             self.LimpaDados()
 
@@ -899,7 +903,7 @@ class MainApp(ctk.CTk):
 
         mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
 
-    def InsertInTXT(self):
+    def InsertInTXT(self, Emp):
 
         if len(self.Dados.Cliente.Adicionais) == 0:
             self.Dados.Cliente.Adicionais.append("Nenhum")
@@ -936,7 +940,7 @@ class MainApp(ctk.CTk):
 
         with open(self.txtFile, 'a') as txt:
             txt.write("\n\n# # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # #\n\n")
-            txt.write(f"{self.Dados.Cliente.Empresa.get()} - {datetime.today().strftime('%X')}\n\n")
+            txt.write(f"{Emp} - {datetime.today().strftime('%X')}\n\n")
             for x in self.listaDeDados:
                 try:
                     if str(x.get()) != "":
