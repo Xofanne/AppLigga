@@ -249,41 +249,74 @@ class FrameCEP(ctk.CTkFrame):
     def __init__(self, master, Dados):
         super().__init__(master)
 
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=5)
+        self.grid_columnconfigure((0, 2), weight=1)
+        self.grid_columnconfigure((1, 3), weight=5)
 
         self.label_CEP = ctk.CTkLabel(self, text='CEP')
         self.label_CEP.grid(row=0, column=0, sticky='e', padx=(20, 2), pady=(5, 1))
 
         self.entry_CEP = ctk.CTkEntry(self, textvariable=Dados.Cliente.CEP, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_CEP.grid(row=0, column=1, padx=(5, 200), pady=(5, 1), sticky='ew')
+        self.entry_CEP.grid(row=0, column=1, columnspan=3, padx=(5, 200), pady=(5, 1), sticky='ew')
 
         self.label_Rua = ctk.CTkLabel(self, text='Rua')
         self.label_Rua.grid(row=1, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Rua = ctk.CTkEntry(self, textvariable=Dados.Cliente.Rua, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Rua.grid(row=1, column=1, padx=5, pady=1, sticky='ew')
+        self.entry_Rua.grid(row=1, column=1, columnspan=3, padx=5, pady=1, sticky='ew')
 
         self.label_Numero = ctk.CTkLabel(self, text='Número')
         self.label_Numero.grid(row=2, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Numero = ctk.CTkEntry(self, textvariable=Dados.Cliente.Numero, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Numero.grid(row=2, column=1, padx=(5, 100), pady=1, sticky='ew')
+        self.entry_Numero.grid(row=2, column=1, columnspan=3, padx=(5, 100), pady=1, sticky='ew')
 
         self.label_Complemento = ctk.CTkLabel(self, text='Comp')
         self.label_Complemento.grid(row=3, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Complemento = ctk.CTkEntry(self, textvariable=Dados.Cliente.Complemento, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Complemento.grid(row=3, column=1, padx=(5, 100), pady=1, sticky='ew')
+        self.entry_Complemento.grid(row=3, column=1, columnspan=3, padx=(5, 100), pady=1, sticky='ew')
 
         self.label_Cidade = ctk.CTkLabel(self, text='Cidade')
         self.label_Cidade.grid(row=4, column=0, sticky='e', padx=(20, 2), pady=1)
 
         self.entry_Cidade = ctk.CTkEntry(self, textvariable=Dados.Cliente.Cidade, justify="center", corner_radius=10, height=28, width=100)
-        self.entry_Cidade.grid(row=4, column=1, padx=(5, 100), pady=1, sticky='ew')
+        self.entry_Cidade.grid(row=4, column=1, columnspan=3, padx=(5, 100), pady=1, sticky='ew')
 
         self.button_Busca = ctk.CTkButton(self, text="Buscar CEP", command=lambda: self.PesquisarCep(Dados))
         self.button_Busca.grid(row=5, column=0, columnspan=2, sticky='new', pady=(5, 1), padx=10)
+
+        self.button_Tecnicos = ctk.CTkButton(self, text="Técnicos", command=lambda: self.ListaTecnicos(master, Dados))
+        self.button_Tecnicos.grid(row=5, column=2, columnspan=2, sticky='new', pady=(5, 1), padx=10)
+
+    def ListaTecnicos(self, master, Dados):
+        if Dados.Cliente.Cidade.get() == "":
+            Dados.Cliente.Cidade.set(value="Este campo não pode estar vazio")
+            return
+        self.toplevel_listaTecnicos = ctk.CTkToplevel(self)
+        self.toplevel_listaTecnicos.title("Técnicos")	
+        self.toplevel_listaTecnicos.geometry(f"+{master.winfo_x()+530}+{master.winfo_y()+100}")
+        self.toplevel_listaTecnicos.grab_set()
+
+        self.label_TopLabel = ctk.CTkLabel(self.toplevel_listaTecnicos, text="Técnicos da região", font=("Helvetica", 20, "bold"))
+        self.label_TopLabel.grid(column=0, row=0, pady=(10, 3), padx=30, sticky="ew")
+        
+        count = 1
+        try:
+            try:
+                with open("_internal/tec.json", "r", encoding="utf-8") as tec:
+                    names = json.load(tec)
+                    for i in names[Dados.Cliente.Cidade.get()]:
+                        self.label = ctk.CTkLabel(self.toplevel_listaTecnicos, text=i, font=("Helvetica", 15, "bold")).grid(column=0, row=count, pady=3, padx=30, sticky="ew")
+                        count += 1
+            except:
+                with open("tec.json", "r", encoding="utf-8") as tec:
+                    names = json.load(tec)
+                    for i in names[Dados.Cliente.Cidade.get()]:
+                        self.label = ctk.CTkLabel(self.toplevel_listaTecnicos, text=i, font=("Helvetica", 15, "bold")).grid(column=0, row=count, pady=3, padx=30, sticky="ew")
+                        count += 1
+        except:
+            self.label = ctk.CTkLabel(self.toplevel_listaTecnicos, text="Esta cidade não está na listada na base", font=("Helvetica", 15, "bold")).grid(column=0, row=0, pady=(10, 3), padx=30, sticky="ew")
+
 
     def PesquisarCep(self, Dados):
         try:
