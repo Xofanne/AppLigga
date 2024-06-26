@@ -439,14 +439,27 @@ class FrameData(ctk.CTkFrame):
     def __init__(self, master, Dados):
         super().__init__(master)
 
-        self.meses28 = ['02']
-        self.meses30 = ['04', '06', '09', '11']
+        self.meses28 = ['Fevereiro']
+        self.meses30 = ['Abril', 'Junho', 'Setembro', 'Novembro']
         self.QTDEDIAS = ['01', '02', '03', '04', '05', '06', '07', '08', '09']
         self.QTDEDIAS31 = [str(x) for x in range(10, 32)]
         self.QTDEDIAS30 = [str(x) for x in range(10, 31)]
         self.QTDEDIAS28 = [str(x) for x in range(10, 29)]
-        self.QTDEMES = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
-        self.ANO = [str(x) for x in range(2024, 2026)]
+        self.QTDEMES = {
+	"Janeiro":"01",
+	"Fevereiro":"02",
+	"Março":"03",
+	"Abril":"04",
+	"Maio":"05",
+	"Junho":"06",
+	"Julho":"07",
+	"Agosto":"08",
+	"Setembro":"09",
+	"Outubro":"10",
+	"Novembro":"11",
+	"Dezembro":"12"
+}
+        self.ANO = [str(x) for x in range(2024, 2027)]
 
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0,1,2,3), weight=1)
@@ -454,7 +467,7 @@ class FrameData(ctk.CTkFrame):
         self.label_instalacao = ctk.CTkLabel(self, text="Data de instalação", font=('helvetica', 14, 'bold'))
         self.label_instalacao.grid(row=0, column=0, columnspan=3, pady=2, padx=1, sticky='new')
 
-        self.option_Mes = ctk.CTkOptionMenu(self, variable=Dados.Cliente.MesInstalacao, values=self.QTDEMES, anchor="center", command=lambda x: self.SetDias(self.option_Mes.get()))
+        self.option_Mes = ctk.CTkOptionMenu(self, values=[x for x in self.QTDEMES.keys()], anchor="center", command=lambda x: self.SetMes(Dados))
         self.option_Mes.set('Mes')
         self.option_Mes.configure(width=70)
         self.option_Mes.grid(row=1, column=0, pady=(0, 5), padx= 2, sticky="se")
@@ -474,6 +487,9 @@ class FrameData(ctk.CTkFrame):
         self.option_Periodo.configure(width=140)
         self.option_Periodo.grid(row=3, column=0, columnspan=2, pady=(1, 10), sticky='n')
 
+    def SetMes(self, Dados):
+        Dados.Cliente.MesInstalacao.set(value=self.QTDEMES[self.option_Mes.get()])
+        self.SetDias(self.option_Mes.get())
 
     def SetDias(self, x):
         if x in self.meses28:
@@ -904,6 +920,8 @@ class MainApp(ctk.CTk):
         mf.EnviaForm.Submit(mf.EnviaForm.FillForm(self.Dados))
 
     def InsertInTXT(self, Emp):
+
+        self.Dados.Cliente.DataInstalacao.set(value=f"{self.Dados.Cliente.AnoInstalacao.get()}-{self.Dados.Cliente.MesInstalacao.get()}-{self.Dados.Cliente.DiaInstalacao.get()}")
 
         if len(self.Dados.Cliente.Adicionais) == 0:
             self.Dados.Cliente.Adicionais.append("Nenhum")
