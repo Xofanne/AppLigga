@@ -351,8 +351,8 @@ class TabViewAdicionais(ctk.CTkTabview):
 
         self.grid_columnconfigure((0, 1), weight=1)
 
-        self.TabLigga_C = "Venda - Ligga"
-        self.TabNova_C = "Venda - Nova"
+        self.TabLigga_C = "Ligga"
+        self.TabNova_C = "Nova"
         self.TabRN_C = "Rede Neutra"
 
         self.TabLigga = "L"
@@ -369,7 +369,7 @@ class TabViewAdicionais(ctk.CTkTabview):
         self.checkbox_Ligga_HBO = ctk.CTkCheckBox(self.tab(self.TabLigga), text="HBO", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_HBO))
         self.checkbox_Ligga_HBO.grid(row=0, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
-        self.checkbox_Ligga_Paramount = ctk.CTkCheckBox(self.tab(self.TabLigga), text="Paramout", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_Paramount))
+        self.checkbox_Ligga_Paramount = ctk.CTkCheckBox(self.tab(self.TabLigga), text="Paramount", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_Paramount))
         self.checkbox_Ligga_Paramount.grid(row=1, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
         self.checkbox_Ligga_Mesh = ctk.CTkCheckBox(self.tab(self.TabLigga), text="Mesh", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Ligga_Mesh))
@@ -383,10 +383,10 @@ class TabViewAdicionais(ctk.CTkTabview):
         self.checkbox_Nova_Seguro = ctk.CTkCheckBox(self.tab(self.TabNova), text="Seguro Residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Seguro))
         self.checkbox_Nova_Seguro.grid(row=0, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
-        self.checkbox_Nova_Rastreamento = ctk.CTkCheckBox(self.tab(self.TabNova), text="Rastreamento de veiculo", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Rastreamento))
+        self.checkbox_Nova_Rastreamento = ctk.CTkCheckBox(self.tab(self.TabNova), text="Rastr. Veicular", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Rastreamento))
         self.checkbox_Nova_Rastreamento.grid(row=1, column=0, columnspan=2, pady=1, padx=5, sticky='w')
 
-        self.checkbox_Nova_Monitoramento = ctk.CTkCheckBox(self.tab(self.TabNova), text="Monitoramento residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Monitoramento))
+        self.checkbox_Nova_Monitoramento = ctk.CTkCheckBox(self.tab(self.TabNova), text="Monit. Residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_Nova_Monitoramento))
         self.checkbox_Nova_Monitoramento.grid(row=2, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         ### FIM TAB NOVA ###
 
@@ -394,7 +394,7 @@ class TabViewAdicionais(ctk.CTkTabview):
         self.checkbox_RN_HBO = ctk.CTkCheckBox(self.tab(self.TabRN), text="HBO", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_HBO))
         self.checkbox_RN_HBO.grid(row=0, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         
-        self.checkbox_RN_Paramount = ctk.CTkCheckBox(self.tab(self.TabRN), text="Paramout", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_Paramount))
+        self.checkbox_RN_Paramount = ctk.CTkCheckBox(self.tab(self.TabRN), text="Paramount", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_Paramount))
         self.checkbox_RN_Paramount.grid(row=1, column=0, columnspan=2, pady=1, padx=5, sticky='w')
         
         self.checkbox_RN_Seguro = ctk.CTkCheckBox(self.tab(self.TabRN), text="Seguro Residencial", onvalue="1", offvalue="0", command=lambda: self.AdicionaRemove(Dados, self.checkbox_RN_Seguro))
@@ -414,7 +414,7 @@ class FrameEmpresa(ctk.CTkFrame):
         self.grid_columnconfigure((0), weight=1)
         self.grid_columnconfigure(2, weight=10)
 
-        self.options_empresa = ctk.CTkOptionMenu(self, values=["Venda - Ligga", "Venda - Nova", "Rede Neutra"], variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
+        self.options_empresa = ctk.CTkOptionMenu(self, values=['Ligga', 'Nova', 'Rede Neutra'], variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
         self.options_empresa.set('Empresa')
         self.options_empresa.configure(width=130)
         self.options_empresa.grid(row=0, column=0, pady=(10, 1), padx=5)
@@ -438,19 +438,21 @@ class FrameEmpresa(ctk.CTkFrame):
     def SetAdicionais(self, adicionaisTab, Dados):
         self.ClearAdicionais(adicionaisTab, Dados)
 
+        Velocidades = ['100 MB', '200 MB', '400 MB', '500 MB', '600 MB', '700 MB', '1 Gb']
+
         if self.options_empresa.get() == self.tabviewAdicionais.TabLigga_C:
             Dados.Cliente.Empresa.set(self.options_empresa.get())
-            self.options_velocidade.configure(values=['100 MB', '200 MB', '400 MB', '500 MB', '600 MB', '700 MB'])
+            self.options_velocidade.configure(values=Velocidades)
             self.options_velocidade.set('Velocidade')
             adicionaisTab.set(adicionaisTab.TabLigga)
         elif self.options_empresa.get() == self.tabviewAdicionais.TabNova_C:
             Dados.Cliente.Empresa.set(self.options_empresa.get())
-            self.options_velocidade.configure(values=['100 MB', '200 MB', '400 MB', '600 MB', '700 MB'])
+            self.options_velocidade.configure(values=Velocidades)
             self.options_velocidade.set('Velocidade')
             adicionaisTab.set(adicionaisTab.TabNova)
         elif self.options_empresa.get() == self.tabviewAdicionais.TabRN_C:
             Dados.Cliente.Empresa.set(self.options_empresa.get())  
-            self.options_velocidade.configure(values=['200 MB', '400 MB', '600 MB', '700 MB', '1 GB'])
+            self.options_velocidade.configure(values=Velocidades)
             self.options_velocidade.set('Velocidade')  
             adicionaisTab.set(adicionaisTab.TabRN)
 
@@ -548,8 +550,8 @@ class FrameConfirm(ctk.CTkFrame):
         self.grid_rowconfigure((0, 1), weight=1)
         self.grid_rowconfigure(2, weight=2)
 
-        self.MATRICULAS = ['29922', '33776', '32817', '20417', '32811', '28219', '33777', '33945', '34066', '34204', '20593', '34335']
-        self.ENTRADA = ["Receptivo", 'Ativo', "Whatsapp"]
+        self.MATRICULAS = ['29922', '33776', '32817', '20417', '28219', '33777', '34066', '34204', '34335']
+        self.ENTRADA = ['Receptivo', 'Ativo', 'Whatsapp']
 
         self.label_IDL = ctk.CTkLabel(self, text="ID da \nligação")
         self.label_IDL.grid(row=0, column=0, pady=(5, 1), padx=(5, 1), sticky='nsew')
