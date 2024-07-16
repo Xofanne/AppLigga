@@ -550,7 +550,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.grid_rowconfigure((0, 1), weight=1)
         self.grid_rowconfigure(2, weight=2)
 
-        self.MATRICULAS = ['29922', '33776', '32817', '20417', '28219', '33777', '34066', '34204', '34335']
+        self.MATRICULAS = ['29922', '33776', '32817', '20417', '28219', '33777', '34066', '34204', '34335', '34708']
         self.ENTRADA = ['Receptivo', 'Ativo', 'Whatsapp']
 
         self.label_IDL = ctk.CTkLabel(self, text="ID da \nligação")
