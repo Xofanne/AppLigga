@@ -10,6 +10,7 @@ from time import sleep
 from random import choice
 import json
 from playsound import playsound
+from pandas import read_csv
 
 class Dados():
     def __init__(self, master) -> None:
@@ -414,12 +415,20 @@ class FrameEmpresa(ctk.CTkFrame):
         self.grid_columnconfigure((0), weight=1)
         self.grid_columnconfigure(2, weight=10)
 
-        self.options_empresa = ctk.CTkOptionMenu(self, values=['Ligga', 'Nova', 'Rede Neutra'], variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
+        url = "https://docs.google.com/spreadsheets/d/19Z7uj5QNBmWX2GBaG9osmEoDcNhM97zUOQoOeGHyckk/export?gid=213062014&format=csv"
+        df_Empresas = read_csv(url, usecols=['Empresas'])
+        df_Planos = read_csv(url, usecols=['Planos'])
+
+        df_Planos_List = df_Planos['Planos'].dropna().values.tolist()
+        df_Empresas_List = df_Empresas['Empresas'].dropna().values.tolist()
+
+
+        self.options_empresa = ctk.CTkOptionMenu(self, values=df_Empresas_List, variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
         self.options_empresa.set('Empresa')
         self.options_empresa.configure(width=130)
         self.options_empresa.grid(row=0, column=0, pady=(10, 1), padx=5)
 
-        self.options_velocidade = ctk.CTkOptionMenu(self, values=[], anchor='center', command=lambda x: Dados.Cliente.Velocidade.set(self.options_velocidade.get()))
+        self.options_velocidade = ctk.CTkOptionMenu(self, values=df_Planos_List, anchor='center', command=lambda x: Dados.Cliente.Velocidade.set(self.options_velocidade.get()))
         self.options_velocidade.set('Velocidade')
         self.options_velocidade.grid(row=1, column=0, pady=1, padx=5)
 
@@ -438,22 +447,14 @@ class FrameEmpresa(ctk.CTkFrame):
     def SetAdicionais(self, adicionaisTab, Dados):
         self.ClearAdicionais(adicionaisTab, Dados)
 
-        Velocidades = ['100 MB', '200 MB', '400 MB', '500 MB', '600 MB', '700 MB', '1 Gb']
-
         if self.options_empresa.get() == self.tabviewAdicionais.TabLigga_C:
             Dados.Cliente.Empresa.set(self.options_empresa.get())
-            self.options_velocidade.configure(values=Velocidades)
-            self.options_velocidade.set('Velocidade')
             adicionaisTab.set(adicionaisTab.TabLigga)
         elif self.options_empresa.get() == self.tabviewAdicionais.TabNova_C:
             Dados.Cliente.Empresa.set(self.options_empresa.get())
-            self.options_velocidade.configure(values=Velocidades)
-            self.options_velocidade.set('Velocidade')
             adicionaisTab.set(adicionaisTab.TabNova)
         elif self.options_empresa.get() == self.tabviewAdicionais.TabRN_C:
-            Dados.Cliente.Empresa.set(self.options_empresa.get())  
-            self.options_velocidade.configure(values=Velocidades)
-            self.options_velocidade.set('Velocidade')  
+            Dados.Cliente.Empresa.set(self.options_empresa.get())
             adicionaisTab.set(adicionaisTab.TabRN)
 
     def ClearAdicionais(self, adicionaisTab, Dados):
@@ -550,7 +551,14 @@ class FrameConfirm(ctk.CTkFrame):
         self.grid_rowconfigure((0, 1), weight=1)
         self.grid_rowconfigure(2, weight=2)
 
-        self.MATRICULAS = ['29922', '33776', '32817', '20417', '28219', '33777', '34066', '34204', '34335', '34708']
+        url = "https://docs.google.com/spreadsheets/d/19Z7uj5QNBmWX2GBaG9osmEoDcNhM97zUOQoOeGHyckk/export?gid=213062014&format=csv"
+        df_Matriculas = read_csv(url, usecols=['Matriculas'])
+
+        self.MATRICULAS = df_Matriculas['Matriculas'].values.tolist()
+
+        for x in self.MATRICULAS:
+            x = str(x)
+
         self.ENTRADA = ['Receptivo', 'Ativo', 'Whatsapp']
 
         self.label_IDL = ctk.CTkLabel(self, text="ID da \nligação")
@@ -631,7 +639,7 @@ class FrameConfirm(ctk.CTkFrame):
         try:
             '''Abre a pasta onde está o arquivo'''
             current_directory = Path(__file__).parent.parent.resolve()
-            wb.open(str(current_directory)+"\TXTs") 
+            wb.open(str(current_directory)+"/TXTs") 
         except:
             current_directory = Path(__file__).parent.resolve()
             wb.open(current_directory)
