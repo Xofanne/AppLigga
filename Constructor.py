@@ -650,22 +650,22 @@ class FrameConfirm(ctk.CTkFrame):
 
         def Confirma():
             self.button_config.configure(text=f"Matrícula: {Dados.Operador.Matricula.get()}\nEntrada: {Dados.Operador.Entrada.get()}")
-            try:
-                with open('dadosOperador.json', 'r+', encoding="utf8") as file:
-                    dados = json.load(file)
-                    dados['Matricula'] = Dados.Operador.Matricula.get()
-                    dados['Entrada'] = Dados.Operador.Entrada.get()
-                    file.seek(0)
-                    json.dump(dados, file)
-                    file.truncate()
-            except:
-                with open('_internal/dadosOperador.json', 'r+', encoding="utf8") as file:
-                    dados = json.load(file)
-                    dados['Matricula'] = Dados.Operador.Matricula.get()
-                    dados['Entrada'] = Dados.Operador.Entrada.get()
-                    file.seek(0)
-                    json.dump(dados, file)
-                    file.truncate()
+            # try:
+            #     with open('dadosOperador.json', 'r+', encoding="utf8") as file:
+            #         dados = json.load(file)
+            #         dados['Matricula'] = Dados.Operador.Matricula.get()
+            #         dados['Entrada'] = Dados.Operador.Entrada.get()
+            #         file.seek(0)
+            #         json.dump(dados, file)
+            #         file.truncate()
+            # except:
+            #     with open('_internal/dadosOperador.json', 'r+', encoding="utf8") as file:
+            #         dados = json.load(file)
+            #         dados['Matricula'] = Dados.Operador.Matricula.get()
+            #         dados['Entrada'] = Dados.Operador.Entrada.get()
+            #         file.seek(0)
+            #         json.dump(dados, file)
+            #         file.truncate()
             self.toplevel_configs.destroy()
 
         self.toplevel_configs = ctk.CTkToplevel()
@@ -821,16 +821,16 @@ class MainApp(ctk.CTk):
 
         self.Dados = Dados(self)
 
-        try:
-            with open('dadosOperador.json', 'r', encoding="utf8") as file:
-                dados = json.load(file)
-                self.Dados.Operador.Matricula.set(dados.get('Matricula'))
-                self.Dados.Operador.Entrada.set(dados.get('Entrada'))
-        except:
-            with open('_internal/dadosOperador.json', 'r', encoding="utf8") as file:
-                dados = json.load(file)
-                self.Dados.Operador.Matricula.set(dados.get('Matricula'))
-                self.Dados.Operador.Entrada.set(dados.get('Entrada'))
+        # try:
+        #     with open('dadosOperador.json', 'r', encoding="utf8") as file:
+        #         dados = json.load(file)
+        #         self.Dados.Operador.Matricula.set(dados.get('Matricula'))
+        #         self.Dados.Operador.Entrada.set(dados.get('Entrada'))
+        # except:
+        #     with open('_internal/dadosOperador.json', 'r', encoding="utf8") as file:
+        #         dados = json.load(file)
+        #         self.Dados.Operador.Matricula.set(dados.get('Matricula'))
+        #         self.Dados.Operador.Entrada.set(dados.get('Entrada'))
 
         self.newTab = TabViewDados(self, self.Dados)
         self.newTab.configure(width=575, height=210)
