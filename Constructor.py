@@ -415,20 +415,20 @@ class FrameEmpresa(ctk.CTkFrame):
         self.grid_columnconfigure((0), weight=1)
         self.grid_columnconfigure(2, weight=10)
 
-        url = "https://docs.google.com/spreadsheets/d/19Z7uj5QNBmWX2GBaG9osmEoDcNhM97zUOQoOeGHyckk/export?gid=213062014&format=csv"
-        df_Empresas = read_csv(url, usecols=['Empresas'])
-        df_Planos = read_csv(url, usecols=['Planos'])
+        # url = "https://docs.google.com/spreadsheets/d/19Z7uj5QNBmWX2GBaG9osmEoDcNhM97zUOQoOeGHyckk/export?gid=213062014&format=csv"
+        # df_Empresas = read_csv(url, usecols=['Empresas'])
+        # df_Planos = read_csv(url, usecols=['Planos'])
 
-        df_Planos_List = df_Planos['Planos'].dropna().values.tolist()
-        df_Empresas_List = df_Empresas['Empresas'].dropna().values.tolist()
+        # df_Planos_List = df_Planos['Planos'].dropna().values.tolist()
+        # df_Empresas_List = df_Empresas['Empresas'].dropna().values.tolist()
 
 
-        self.options_empresa = ctk.CTkOptionMenu(self, values=df_Empresas_List, variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
+        self.options_empresa = ctk.CTkOptionMenu(self, values=["1", "2"], variable=Dados.Cliente.Empresa, command=lambda x: self.SetAdicionais(self.tabviewAdicionais, Dados), anchor='center')
         self.options_empresa.set('Empresa')
         self.options_empresa.configure(width=130)
         self.options_empresa.grid(row=0, column=0, pady=(10, 1), padx=5)
 
-        self.options_velocidade = ctk.CTkOptionMenu(self, values=df_Planos_List, anchor='center', command=lambda x: Dados.Cliente.Velocidade.set(self.options_velocidade.get()))
+        self.options_velocidade = ctk.CTkOptionMenu(self, values=["100", "200"], anchor='center', command=lambda x: Dados.Cliente.Velocidade.set(self.options_velocidade.get()))
         self.options_velocidade.set('Velocidade')
         self.options_velocidade.grid(row=1, column=0, pady=1, padx=5)
 
@@ -551,13 +551,13 @@ class FrameConfirm(ctk.CTkFrame):
         self.grid_rowconfigure((0, 1), weight=1)
         self.grid_rowconfigure(2, weight=2)
 
-        url = "https://docs.google.com/spreadsheets/d/19Z7uj5QNBmWX2GBaG9osmEoDcNhM97zUOQoOeGHyckk/export?gid=213062014&format=csv"
-        df_Matriculas = read_csv(url, usecols=['Matriculas'])
+        # url = "https://docs.google.com/spreadsheets/d/19Z7uj5QNBmWX2GBaG9osmEoDcNhM97zUOQoOeGHyckk/export?gid=213062014&format=csv"
+        # df_Matriculas = read_csv(url, usecols=['Matriculas'])
 
-        self.MATRICULAS = df_Matriculas['Matriculas'].values.tolist()
+        # self.MATRICULAS = df_Matriculas['Matriculas'].values.tolist()
 
-        for x in self.MATRICULAS:
-            x = str(x)
+        # for x in self.MATRICULAS:
+        #     x = str(x)
 
         self.ENTRADA = ['Receptivo', 'Ativo', 'Whatsapp']
 
@@ -676,7 +676,7 @@ class FrameConfirm(ctk.CTkFrame):
         self.label_Matricula = ctk.CTkLabel(self.toplevel_configs, text="Matrícula")
         self.label_Matricula.grid(row=0, column=0, pady=(10, 3), padx=(50, 8))
         
-        self.option_matriculas = ctk.CTkOptionMenu(self.toplevel_configs, variable=Dados.Operador.Matricula, values=self.MATRICULAS, anchor="center")
+        self.option_matriculas = ctk.CTkOptionMenu(self.toplevel_configs, variable=Dados.Operador.Matricula, values=["1", "2", "3"], anchor="center")
         self.option_matriculas.grid(row=0, column=1, pady=(10, 3), padx=(8, 50))
 
         self.label_Entrada = ctk.CTkLabel(self.toplevel_configs, text="Entrada")
@@ -781,22 +781,6 @@ class MainApp(ctk.CTk):
             with open('_internal/names.json', 'r', encoding="utf8") as names:
                 names_dados = json.load(names)
                 self.title(choice(names_dados.get('names')))
-
-        print('''\n\n//        :::        ::::::::::: ::::::::   ::::::::      :::                       
-//       :+:            :+:    :+:    :+: :+:    :+:   :+: :+:                      
-//      +:+            +:+    +:+        +:+         +:+   +:+                      
-//     +#+            +#+    :#:        :#:        +#++:++#++:                      
-//    +#+            +#+    +#+   +#+# +#+   +#+# +#+     +#+                       
-//   #+#            #+#    #+#    #+# #+#    #+# #+#     #+#                        
-//  ########## ########### ########   ########  ###     ###''')            
-        print('''//    ::::::::::: :::::::::: :::        :::::::::: ::::::::   ::::::::    :::   ::: 
-//       :+:     :+:        :+:        :+:       :+:    :+: :+:    :+:  :+:+: :+:+: 
-//      +:+     +:+        +:+        +:+       +:+        +:+    +:+ +:+ +:+:+ +:+ 
-//     +#+     +#++:++#   +#+        +#++:++#  +#+        +#+    +:+ +#+  +:+  +#+  
-//    +#+     +#+        +#+        +#+       +#+        +#+    +#+ +#+       +#+   
-//   #+#     #+#        #+#        #+#       #+#    #+# #+#    #+# #+#       #+#    
-//  ###     ########## ########## ########## ########   ########  ###       ###\n\n''')
-        sleep(0.5)
 
         try:
             mkdir(f"{self.caminhoArquivo}\\TXTs")
